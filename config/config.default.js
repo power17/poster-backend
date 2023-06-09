@@ -16,7 +16,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1686322150637_6377';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = ['myLogger'];
   config.security = {
     csrf: {
       enable: false,
@@ -26,6 +26,9 @@ module.exports = appInfo => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
+    myLogger: {
+      allowedMethod: ['POST']
+    }
   };
 
   return {
