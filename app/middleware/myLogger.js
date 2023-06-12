@@ -6,9 +6,11 @@ module.exports = (option, app) => {
         await next();
         const ms = Date.now() - startTime;
         const logTime = `${requestTime} -- ${ctx.method} -- ${ctx.url} -- ${ms}ms`
-        if (option.allowedMethod.includes(ctx.method)) {
-            appendFileSync('./log.txt', logTime + '\n')
-        }
+        // if (option.allowedMethod.includes(ctx.method)) {
+        //     appendFileSync('./log.txt', logTime + '\n')
+        // }
+        appendFileSync('./log.txt', logTime + '\n')
+        console.log('logger start')
 
     }
 };

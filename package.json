@@ -7,6 +7,7 @@
     "declarations": true
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "egg": "^3",
     "egg-scripts": "^2"
   },
