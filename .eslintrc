@@ -1,8 +1,6 @@
 {
-  "extends": "eslint-config-egg",
   "root": true,
+  "extends": "eslint-config-egg/typescript",
   "rules": {
-    "semi":"error",
-    "tabWidth": 4
   }
 }
