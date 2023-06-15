@@ -24,10 +24,13 @@ export class HelloService {
   }
   private getPersonModel() {
     const UserSchema = new Schema({
-      name: String,
-      price: Number,
+      name: { type: String },
+      price: { type: Number },
     }, { collection: 'products' });
-    return this.mongoose.model('Products', UserSchema);
+    if (!this.mongoose.models.ProductsModel) {
+      this.mongoose.model('ProductsModel', UserSchema);
+    }
+    return this.mongoose.models.ProductsModel;
   }
   async showPerson():Promise<any> {
     const personModel = this.getPersonModel();
