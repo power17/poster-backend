@@ -14,7 +14,10 @@ export default (appInfo: EggAppInfo) => {
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     mongoose: {
-      url: 'mongodb://localhost:27017/hello',
+      url: 'mongodb://localhost:27017/poster',
+    },
+    security: {
+      csrf: false,
     },
   };
 

@@ -16,6 +16,7 @@
     "ci": "npm run lint && npm run cov && npm run tsc && npm run clean",
     "lint": "eslint . --ext .ts --cache",
     "tsc": "tsc",
+    "ets": "ets",
     "clean": "tsc -b --clean"
   },
   "dependencies": {
@@ -30,14 +31,15 @@
     "egg-mongoose": "^3.3.1",
     "egg-scripts": "^2.17.0",
     "egg-tracer": "^2.0.0",
-    "mongoose": "^7.3.0"
+    "egg-validate": "^2.0.2"
   },
   "devDependencies": {
     "@eggjs/tsconfig": "1",
     "@types/mocha": "10",
     "@types/node": "18",
-    "egg-bin": "6",
+    "egg-bin": "6.4.1",
     "egg-mock": "5.10.7",
+    "egg-ts-helper": "^1.34.7",
     "eslint": "8",
     "eslint-config-egg": "12",
     "typescript": "4"
