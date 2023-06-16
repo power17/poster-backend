@@ -1,11 +1,10 @@
 import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, Context, EggType, EggContext } from '@eggjs/tegg';
-import { HelloService } from '@/module/foo';
+import { HelloService } from '@/module/service';
 import { IHelper } from 'egg';
 
 @HTTPController({
   path: '/bar',
 })
-@HTTPController()
 export class UserController {
   @Inject()
   @EggQualifier(EggType.CONTEXT)

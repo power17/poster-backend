@@ -1,6 +1,7 @@
-import { SingletonProto, AccessLevel, Inject, EggContext } from '@eggjs/tegg';
+import { SingletonProto, AccessLevel, EggContext } from '@eggjs/tegg';
+import { UserModelType } from 'app/model/user';
 
-import { Connection } from 'mongoose';
+// import { Connection } from 'mongoose';
 // import { Connection } from 'mongoose';
 // import { Schema } from 'mongoose';
 
@@ -10,14 +11,27 @@ import { Connection } from 'mongoose';
 })
 
 export class HelloService {
+  async createByEmail(ctx: EggContext, payload: UserModelType) {
+    const { username, password } = payload;
+    const userCreatedData: Partial<UserModelType> = {
+      username,
+      password,
+      email: username,
+    };
+    return ctx.app.model.User.create(userCreatedData);
+  }
+  async findById(ctx: EggContext, id: string) {
+    return ctx.app.model.User.findById(id);
+  }
+
   // constructor(ctx: Context) {
   //   super(ctx);
   // }
   // @Inject()
   // protected readonly config: EggAppConfig;
   // 注入一个 logger
-  @Inject()
-  mongoose: Connection;
+  // @Inject()
+  // mongoose: Connection;
 
   // logger: EggLogger;
   // @EggQualifier(EggType.APP)

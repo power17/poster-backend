@@ -1,6 +1,6 @@
 import { EggLogger } from 'egg';
 import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum } from '@eggjs/tegg';
-import { HelloService } from '@/module/foo';
+import { HelloService } from '@/module/service';
 @HTTPController({
   path: '/',
 })

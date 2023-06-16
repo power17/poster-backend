@@ -29,6 +29,10 @@ const plugin: EggPlugin = {
     enable: true,
     package: 'egg-tracer',
   },
+  mongoose: {
+    enable: true,
+    package: 'egg-mongoose',
+  },
 };
 
 export default plugin;

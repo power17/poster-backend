@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { app } from 'egg-mock/bootstrap';
-import { HelloService } from '@/module/foo/service/HelloService';
+import { HelloService } from '@/module/service/user/userService';
 
 describe('test/app/module/foo/service/HelloService.test.js', () => {
   it('should hello work', async () => {
