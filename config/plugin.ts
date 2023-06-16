@@ -34,9 +34,15 @@ const plugin: EggPlugin = {
     enable: true,
     package: 'egg-mongoose',
   },
+  // 数据验证
   validate: {
     enable: true,
     package: 'egg-validate',
+  },
+  // 加密
+  bcrypt: {
+    enable: true,
+    package: 'egg-bcrypt',
   },
 };
 

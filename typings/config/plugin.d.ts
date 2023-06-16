@@ -24,6 +24,7 @@ import '@eggjs/tegg-aop-plugin';
 import 'egg-tracer';
 import 'egg-mongoose';
 import 'egg-validate';
+import 'egg-bcrypt';
 import { EggPluginItem } from 'egg';
 declare module 'egg' {
   interface EggPlugin {
@@ -48,5 +49,6 @@ declare module 'egg' {
     tracer?: EggPluginItem;
     mongoose?: EggPluginItem;
     validate?: EggPluginItem;
+    bcrypt?: EggPluginItem;
   }
 }

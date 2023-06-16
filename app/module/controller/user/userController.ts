@@ -43,8 +43,9 @@ export class UserController {
   async createByEmail(@HTTPBody() req:UserModelType, @Context() ctx: EggContext) {
     // 参数检查
     const errors = ctx.app.validator.validate(userCreatedRule, req);
-    ctx.logger.warn(errors);
+
     if (errors) {
+      ctx.logger.warn(errors);
       return ctx.helper.error({ errorType: 'createUserValidateFail', errDetail: errors });
     }
     // 检查用户名是否唯一
@@ -55,7 +56,7 @@ export class UserController {
     // ctx.validate(userCreatedRule);
     ctx.validate(userCreatedRule);
     // ctx.validate(userCreatedRule);
-    const res = await this.userService.createByEmail(req);
+    const res = await this.userService.createByEmail(req, ctx);
     return this.helper.success({ res });
   }
   @HTTPMethod({

@@ -9,7 +9,10 @@ export default (appInfo: EggAppInfo) => {
 
   // add your egg config in here
   config.middleware = [];
-
+  // 用户密码加密
+  config.bcrypt = {
+    saltRounds: 10,
+  };
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
@@ -17,7 +20,7 @@ export default (appInfo: EggAppInfo) => {
       url: 'mongodb://localhost:27017/poster',
     },
     security: {
-      csrf: false,
+      csrf: { enable: false },
     },
   };
 
