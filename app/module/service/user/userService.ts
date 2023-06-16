@@ -1,5 +1,7 @@
-import { SingletonProto, AccessLevel, EggContext } from '@eggjs/tegg';
+import { SingletonProto, AccessLevel, Inject, EggQualifier, EggType, ContextProto } from '@eggjs/tegg';
 import { UserModelType } from 'app/model/user';
+import { MongooseModel } from 'egg';
+
 
 // import { Connection } from 'mongoose';
 // import { Connection } from 'mongoose';
@@ -9,19 +11,23 @@ import { UserModelType } from 'app/model/user';
   // 如果需要在上层使用，需要把 accessLevel 显示声明为 public
   accessLevel: AccessLevel.PUBLIC,
 })
+@ContextProto()
+export class UserService {
+  @Inject()
+  @EggQualifier(EggType.CONTEXT)
+  model:MongooseModel;
 
-export class HelloService {
-  async createByEmail(ctx: EggContext, payload: UserModelType) {
+  async createByEmail(payload: UserModelType) {
     const { username, password } = payload;
     const userCreatedData: Partial<UserModelType> = {
       username,
       password,
       email: username,
     };
-    return ctx.app.model.User.create(userCreatedData);
+    return this.model.User.create(userCreatedData);
   }
-  async findById(ctx: EggContext, id: string) {
-    return ctx.app.model.User.findById(id);
+  async findById(id: string) {
+    return this.model.User.findById(id);
   }
 
   // constructor(ctx: Context) {
@@ -52,10 +58,10 @@ export class HelloService {
   //   }
   //   return this.mongoose.models.ProductsModel;
   // }
-  async showPerson(ctx:EggContext) {
+  async showPerson() {
     // const personModel = this.getPersonModel();
     // console.log(this.model);
-    const result = await ctx.app.model.User.find({ price: { $gt: 232 } }).exec();
+    const result = await this.model.User.find({ price: { $gt: 232 } }).exec();
     return result;
     // return 'fdsf';
   }
