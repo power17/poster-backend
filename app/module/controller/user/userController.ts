@@ -9,10 +9,15 @@ const userCreatedRule = {
   password: { type: 'password', min: 8 },
 };
 export const userErrorMessage = {
-  CreateUserValidateFail: {
+  createUserValidateFail: {
     errno: 101001,
     msg: '请求用户创建接口参数有误',
   },
+  createUserAlreadyExist: {
+    errno: 101002,
+    msg: '该邮箱已经被注册，请直接登录',
+  },
+
 };
 
 @HTTPController({
@@ -36,10 +41,16 @@ export class UserController {
   // @HTTPQuery({ name: 'userId' }) userId: string;
   // @Context() ctx: EggType,
   async createByEmail(@HTTPBody() req:UserModelType, @Context() ctx: EggContext) {
+    // 参数检查
     const errors = ctx.app.validator.validate(userCreatedRule, req);
     ctx.logger.warn(errors);
     if (errors) {
-      return ctx.helper.error({ errorType: 'CreateUserValidateFail', errDetail: errors });
+      return ctx.helper.error({ errorType: 'createUserValidateFail', errDetail: errors });
+    }
+    // 检查用户名是否唯一
+    const user = await this.userService.findByUsername(req.username);
+    if (user) {
+      return ctx.helper.error({ errorType: 'createUserAlreadyExist' });
     }
     // ctx.validate(userCreatedRule);
     ctx.validate(userCreatedRule);

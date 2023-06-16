@@ -30,6 +30,10 @@ export class UserService {
     const result = await this.model.User.findById(id);
     return result;
   }
+  async findByUsername(username: string) {
+    const result = await this.model.User.findOne({ username });
+    return result;
+  }
 
   // constructor(ctx: Context) {
   //   super(ctx);
