@@ -1,6 +1,7 @@
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, Context, EggType, EggContext } from '@eggjs/tegg';
-import { HelloService } from '@/module/service';
+import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody } from '@eggjs/tegg';
+import { UserService } from '@/module/service';
 import { IHelper } from 'egg';
+import { UserModelType } from 'app/model/user';
 
 @HTTPController({
   path: '/bar',
@@ -10,7 +11,7 @@ export class UserController {
   @EggQualifier(EggType.CONTEXT)
   helper: IHelper;
   @Inject()
-  helloService: HelloService;
+  UserService: UserService;
 
 
   @HTTPMethod({
@@ -18,10 +19,13 @@ export class UserController {
     path: 'user',
   })
   // @HTTPQuery({ name: 'userId' }) userId: string;
-  async user(@Context() ctx: EggContext) {
-    const res = await this.helloService.showPerson(ctx);
-    return this.helper.success({ res, msg: 'fjsdlfjds' });
-    // return await this.helloService.hello(userId);
+  // @Context() ctx: EggType,
+  async user(@HTTPBody() req:UserModelType) {
+    console.log(req);
+    // await this.UserService.createByEmail(req);
+    // return this.helper.success({ res, msg: 'fjsdlfjds' });
+    console.log(this.UserService);
+    // return await this.UserService.hello('11');
     // return res;
   }
 }
