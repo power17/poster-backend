@@ -1,6 +1,6 @@
 import { SingletonProto, AccessLevel, Inject, EggQualifier, EggType, ContextProto } from '@eggjs/tegg';
 import { UserModelType } from 'app/model/user';
-import { MongooseModel } from 'egg';
+import { MongooseModels } from 'egg';
 
 
 // import { Connection } from 'mongoose';
@@ -15,8 +15,7 @@ import { MongooseModel } from 'egg';
 export class UserService {
   @Inject()
   @EggQualifier(EggType.CONTEXT)
-  model:MongooseModel;
-
+  model:MongooseModels;
   async createByEmail(payload: UserModelType) {
     const { username, password } = payload;
     const userCreatedData: Partial<UserModelType> = {
@@ -27,7 +26,9 @@ export class UserService {
     return this.model.User.create(userCreatedData);
   }
   async findById(id: string) {
-    return this.model.User.findById(id);
+    // user模型
+    const result = await this.model.User.findById(id);
+    return result;
   }
 
   // constructor(ctx: Context) {
