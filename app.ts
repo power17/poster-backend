@@ -1,6 +1,7 @@
 import { Application, IBoot } from 'egg';
 import { createConnection } from 'mongoose';
 import assert from 'node:assert';
+import { join } from 'node:path';
 
 export default class AppBoot implements IBoot {
   private readonly app: Application;
@@ -20,7 +21,18 @@ export default class AppBoot implements IBoot {
     this.app.config.coreMiddleware.unshift('myLogger');
   }
   async willReady(): Promise<void> {
-    console.log('willReady middleware', this.app.config.coreMiddleware);
+    // let app: Application;
+    // console.log('willReady middleware', this.app.config.coreMiddleware);
+    //  加载model      app/model/user.ts ==>app.model.User
+    const dir = join(this.app.config.baseDir, 'app/model');
+    this.app.loader.loadToApp(dir, 'model', {
+      caseStyle: 'upper',
+    });
+    console.log(this.app.model, 'this.app');
+    // app.model = this.app.model;
 
+  }
+  async didReady(): Promise<void> {
+    await this.app.createAnonymousContext();
   }
 }
