@@ -6,7 +6,7 @@ export default () => {
     const requestTime = new Date();
     await next();
     const ms = Date.now() - startTime;
-    const logTime = `${requestTime} -- ${ctx.method} --${ctx.url} -- ${ms}\n  `;
+    const logTime = `${requestTime} -- ${ctx.method} --${ctx.url} -- ${ms}ms\n  `;
     appendFileSync('./log.txt', logTime);
   };
 };

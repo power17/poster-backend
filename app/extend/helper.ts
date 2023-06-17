@@ -1,4 +1,4 @@
-import { userErrorMessage } from 'app/module/controller/user/userController';
+import { userErrorMessage } from '@/module/controller/user';
 interface RespType {
   res? : any;
   msg? : string
