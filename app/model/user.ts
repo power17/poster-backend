@@ -1,18 +1,6 @@
 import { Application } from 'egg';
 import { Schema } from 'mongoose';
-
-// function initUserModel(app:Application) {
-//   const UserSchema = new Schema({
-//     name: { type: String },
-//     price: { type: Number },
-//   }, { collection: 'products' });
-//   if (!app.mongoose.models.ProductsModel) {
-//     app.mongoose.model('ProductsModel', UserSchema);
-//   }
-//   // app.model.User = app.mongoose.models.ProductsModel;
-//   return app.mongoose.models.ProductsModel;
-// }
-// export default initUserModel;
+import AutoIncrementFactory from 'mongoose-sequence';
 
 export interface UserModelType {
   username: string;
@@ -26,6 +14,7 @@ export interface UserModelType {
 
 }
 function initUserModel(app:Application) {
+  const AutoIncrement = AutoIncrementFactory(app.mongoose);
   const UserSchema = new Schema<UserModelType>({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -33,7 +22,16 @@ function initUserModel(app:Application) {
     nickname: { type: String },
     picture: { type: String },
     phoneNumber: { type: String },
-  }, { timestamps: true });
+  }, {
+    timestamps: { currentTime: () => new Date(), createdAt: 'createdAt', updatedAt: 'updatedAt' },
+    toJSON: {
+      transform(_doc, _ret) {
+        delete _ret.password;
+        delete _ret.__v;
+      },
+    },
+  });
+  UserSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'user-id' });
   return app.mongoose.model<UserModelType>('User', UserSchema);
 }
 export default initUserModel;
