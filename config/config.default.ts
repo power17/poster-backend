@@ -16,9 +16,13 @@ export default (appInfo: EggAppInfo) => {
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
-    mongoose: {
+    mongoose: { client: {
       url: 'mongodb://localhost:27017/poster',
-    },
+      options: { useUnifiedTopology: true },
+    } },
+    // mongoose: {
+    //   url: 'mongodb://localhost:27017/poster',
+    // },
     security: {
       csrf: { enable: false },
     },

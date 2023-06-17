@@ -9,13 +9,17 @@ const userCreatedRule = {
   password: { type: 'password', min: 8 },
 };
 export const userErrorMessage = {
-  createUserValidateFail: {
+  userValidateFail: {
     errno: 101001,
-    msg: '请求用户创建接口参数有误',
+    msg: '请求用户接口参数有误',
   },
   createUserAlreadyExist: {
     errno: 101002,
     msg: '该邮箱已经被注册，请直接登录',
+  },
+  loginCheckFailInfo: {
+    errno: 101003,
+    msg: '用户不存在或者密码不正确',
   },
 
 };
@@ -32,7 +36,11 @@ export class UserController {
   // validate:EggPlugin;
   @Inject()
   userService: UserService;
-
+  validateUserInput(ctx:EggContext, req:UserModelType) {
+    // 参数检查
+    const errors = ctx.app.validator.validate(userCreatedRule, req);
+    return errors;
+  }
 
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
@@ -41,12 +49,10 @@ export class UserController {
   // @HTTPQuery({ name: 'userId' }) userId: string;
   // @Context() ctx: EggType,
   async createByEmail(@HTTPBody() req:UserModelType, @Context() ctx: EggContext) {
-    // 参数检查
-    const errors = ctx.app.validator.validate(userCreatedRule, req);
-
+    const errors = this.validateUserInput(ctx, req);
     if (errors) {
       ctx.logger.warn(errors);
-      return ctx.helper.error({ errorType: 'createUserValidateFail', errDetail: errors });
+      return ctx.helper.error({ errorType: 'userValidateFail', errDetail: errors });
     }
     // 检查用户名是否唯一
     const user = await this.userService.findByUsername(req.username);
@@ -54,16 +60,42 @@ export class UserController {
       return ctx.helper.error({ errorType: 'createUserAlreadyExist' });
     }
     // ctx.validate(userCreatedRule);
-    ctx.validate(userCreatedRule);
-    // ctx.validate(userCreatedRule);
     const res = await this.userService.createByEmail(req, ctx);
-    return this.helper.success({ res });
+    return ctx.helper.success({ res });
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: 'login',
+  })
+  async loginByEmail(@HTTPBody() req:UserModelType, @Context() ctx: EggContext) {
+    const errors = this.validateUserInput(ctx, req);
+    //  check request param
+    if (errors) {
+      ctx.logger.warn(errors);
+      return ctx.helper.error({ errorType: 'userValidateFail', errDetail: errors });
+    }
+    // Check whether the user exist
+    const { username, password } = req;
+    const user = await this.userService.findByUsername(username);
+    if (!user) {
+      return ctx.helper.error({ errorType: 'loginCheckFailInfo' });
+    }
+    // check password
+    const validatePassword = await ctx.compare(password, user.password);
+    if (!validatePassword) {
+      ctx.helper.error({ errorType: 'loginCheckFailInfo' });
+    }
+    return ctx.helper.success({ res: user.toJSON(), msg: '登录成功' });
+
+
   }
   @HTTPMethod({
     method: HTTPMethodEnum.GET,
     path: 'query',
   })
   async findById(@HTTPQuery() id: string) {
+    // const { ctx } = this;
+    // console.log(ctx.app.genHash);
     return this.userService.findById(id);
   }
 }

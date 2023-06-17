@@ -44,6 +44,9 @@ dependencies:
   egg-validate:
     specifier: ^2.0.2
     version: 2.0.2
+  mongoose-sequence:
+    specifier: ^5.3.1
+    version: 5.3.1(mongoose@5.13.17)
 
 devDependencies:
   '@eggjs/tsconfig':
@@ -1361,6 +1364,12 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       tslib: 2.5.3
+
+  /async@2.6.4:
+    resolution: {integrity: sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==}
+    dependencies:
+      lodash: 4.17.21
+    dev: false
 
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -4459,6 +4468,16 @@ packages:
     peerDependencies:
       mongoose: '*'
     dependencies:
+      mongoose: 5.13.17
+    dev: false
+
+  /mongoose-sequence@5.3.1(mongoose@5.13.17):
+    resolution: {integrity: sha512-kQB1ctCdAQT8YdQzoHV0CpBRsO4RNVy03SOkzM6TQKBbGBs1ZgVS4UlKsuvBPaiPt9q5tKgQZvorGJ1awbHDqA==}
+    peerDependencies:
+      mongoose: '>=4'
+    dependencies:
+      async: 2.6.4
+      lodash: 4.17.21
       mongoose: 5.13.17
     dev: false
 
