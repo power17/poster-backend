@@ -17,8 +17,6 @@ export class HomeController {
 
   async index() {
     this.logger.info('hello egg logger');
-    // const res = await this.helloService.showPerson();
-    // return res;
     return 'nofsdnf';
   }
 }
