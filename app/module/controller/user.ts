@@ -2,6 +2,7 @@ import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggTy
 import { UserService } from '@/module/service';
 import { IHelper } from 'egg';
 import { UserModelType } from 'app/model/user';
+import { sign, verify } from 'jsonwebtoken';
 
 
 // import { EggPlugin } from 'typings/app';
@@ -21,6 +22,10 @@ export const userErrorMessage = {
   loginCheckFailInfo: {
     errno: 101003,
     msg: '用户不存在或者密码不正确',
+  },
+  loginValidateFail: {
+    errno: 101004,
+    msg: '登录验证失败',
   },
 
 };
@@ -87,9 +92,31 @@ export class UserController {
     if (!validatePassword) {
       ctx.helper.error({ errorType: 'loginCheckFailInfo' });
     }
-    ctx.cookies.set('username', user.username, { encrypt: true });
-    return ctx.helper.success({ res: user.toJSON(), msg: '登录成功' });
+    // Register claims 注册相关信息
+    // public claims 公共信息 should be unique like email, address or phone_number
+    // genarate token sign
+    const token = sign({ username: user.username }, ctx.app.config.secret, { expiresIn: 60 * 60 });
+    // ctx.cookies.set('username', user.username, { encrypt: true });
+    // ctx.session.username = user.username;
+    return ctx.helper.success({ res: { token }, msg: '登录成功' });
 
+
+  }
+  getTokenValue(ctx:EggContext) {
+    const { authorization } = ctx.header;
+    if (!authorization && !ctx.header) {
+      return false;
+    }
+    if (typeof authorization === 'string') {
+      const parts = authorization.trim().split(' ');
+      console.log(parts);
+      if (parts.length === 2) {
+        if (/^bearer$/i.test(parts[0])) {
+          return parts[1];
+        }
+      }
+    }
+    return false;
 
   }
   @HTTPMethod({
@@ -97,11 +124,20 @@ export class UserController {
     path: 'query',
   })
   async findById(@HTTPQuery() id: string, @Context() ctx: EggContext) {
-    // const { ctx } = this;
-    // console.log(ctx.app.genHash);
-    console.log(ctx.cookies.get('username'));
+    // const { username } = ctx.session;
     console.log(id);
+    const token = this.getTokenValue(ctx);
+    if (!token) {
+      return ctx.helper.error({ errorType: 'loginValidateFail' });
+    }
+    try {
+      const decode = verify(token, ctx.app.config.secret);
+      return ctx.helper.success({ res: { decode } });
+    } catch (e) {
+      return ctx.helper.error({ errorType: 'loginValidateFail' });
+    }
     // const row = await this.userService.findById(id);
-    return ctx.helper.success({ res: ctx.cookies.get('username', { encrypt: true }) });
+    // ctx.cookies.get('username', { encrypt: true }) }
+
   }
 }
