@@ -18,6 +18,7 @@ export default class AppBoot implements IBoot {
 
   }
   configWillLoad() {
+    // 加入中间件
     this.app.config.coreMiddleware.unshift('myLogger');
   }
   async willReady(): Promise<void> {

@@ -1,8 +1,9 @@
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, HTTPQuery, Context, EggContext } from '@eggjs/tegg';
+import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, HTTPQuery, Context, EggContext, Middleware } from '@eggjs/tegg';
 import { UserService } from '@/module/service';
 import { IHelper } from 'egg';
 import { UserModelType } from 'app/model/user';
-import { sign, verify } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
+import jwt from '../../middleware/jwt';
 
 
 // import { EggPlugin } from 'typings/app';
@@ -95,7 +96,7 @@ export class UserController {
     // Register claims 注册相关信息
     // public claims 公共信息 should be unique like email, address or phone_number
     // genarate token sign
-    const token = sign({ username: user.username }, ctx.app.config.secret, { expiresIn: 60 * 60 });
+    const token = sign({ username: user.username }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
     // ctx.cookies.set('username', user.username, { encrypt: true });
     // ctx.session.username = user.username;
     return ctx.helper.success({ res: { token }, msg: '登录成功' });
@@ -123,21 +124,13 @@ export class UserController {
     method: HTTPMethodEnum.GET,
     path: 'query',
   })
+  @Middleware(jwt)
   async findById(@HTTPQuery() id: string, @Context() ctx: EggContext) {
     // const { username } = ctx.session;
     console.log(id);
-    const token = this.getTokenValue(ctx);
-    if (!token) {
-      return ctx.helper.error({ errorType: 'loginValidateFail' });
-    }
-    try {
-      const decode = verify(token, ctx.app.config.secret);
-      return ctx.helper.success({ res: { decode } });
-    } catch (e) {
-      return ctx.helper.error({ errorType: 'loginValidateFail' });
-    }
-    // const row = await this.userService.findById(id);
-    // ctx.cookies.get('username', { encrypt: true }) }
+    const userData = await this.userService.findByUsername(ctx.state.user.username);
+    return ctx.helper.success({ res: { userData } });
+
 
   }
 }

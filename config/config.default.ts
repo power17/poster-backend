@@ -26,7 +26,7 @@ export default (appInfo: EggAppInfo) => {
     security: {
       csrf: { enable: false },
     },
-    secret: 'power123456',
+    jwt: { secret: 'power123456' },
   };
 
   // the return config will combines to EggAppConfig
