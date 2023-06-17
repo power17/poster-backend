@@ -3,6 +3,7 @@ import { UserService } from '@/module/service';
 import { IHelper } from 'egg';
 import { UserModelType } from 'app/model/user';
 
+
 // import { EggPlugin } from 'typings/app';
 const userCreatedRule = {
   username: 'email',
@@ -61,6 +62,7 @@ export class UserController {
     }
     // ctx.validate(userCreatedRule);
     const res = await this.userService.createByEmail(req, ctx);
+
     return ctx.helper.success({ res });
   }
   @HTTPMethod({
@@ -85,6 +87,7 @@ export class UserController {
     if (!validatePassword) {
       ctx.helper.error({ errorType: 'loginCheckFailInfo' });
     }
+    ctx.cookies.set('username', user.username, { encrypt: true });
     return ctx.helper.success({ res: user.toJSON(), msg: '登录成功' });
 
 
@@ -93,9 +96,12 @@ export class UserController {
     method: HTTPMethodEnum.GET,
     path: 'query',
   })
-  async findById(@HTTPQuery() id: string) {
+  async findById(@HTTPQuery() id: string, @Context() ctx: EggContext) {
     // const { ctx } = this;
     // console.log(ctx.app.genHash);
-    return this.userService.findById(id);
+    console.log(ctx.cookies.get('username'));
+    console.log(id);
+    // const row = await this.userService.findById(id);
+    return ctx.helper.success({ res: ctx.cookies.get('username', { encrypt: true }) });
   }
 }
