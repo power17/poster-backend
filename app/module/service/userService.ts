@@ -1,6 +1,8 @@
 import { SingletonProto, AccessLevel, Inject, EggQualifier, EggType, ContextProto, EggContext } from '@eggjs/tegg';
 import { UserModelType } from 'app/model/user';
+import { sign } from 'jsonwebtoken';
 import { MongooseModels } from 'egg';
+import { EggAppConfig } from 'typings/app';
 
 
 // import { Connection } from 'mongoose';
@@ -15,7 +17,9 @@ import { MongooseModels } from 'egg';
 export class UserService {
   @Inject()
   @EggQualifier(EggType.CONTEXT)
-  model:MongooseModels;
+  private model:MongooseModels;
+  @Inject()
+  private config: EggAppConfig;
   async createByEmail(payload: UserModelType, ctx:EggContext) {
     const { username, password } = payload;
     // 加密
@@ -32,9 +36,25 @@ export class UserService {
     const result = await this.model.User.findById(id);
     return result;
   }
-  async findByUsername(username: string) {
-    const result = await this.model.User.findOne({ username });
+  async findByOneParam(param: string) {
+    const result = await this.model.User.findOne({ username: param });
     return result;
+  }
+  async loginByPhone(phoneNumber: string) {
+    const user = await this.findByOneParam(phoneNumber);
+    if (user) {
+      const token = sign({ phoneNumber: user.phoneNumber }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+      return token;
+    }
+    const userCreateData: Partial<UserModelType> = {
+      phoneNumber,
+      username: phoneNumber,
+      nickname: `power${phoneNumber.slice(-4)}`,
+      type: 'phone',
+    };
+    const newUser = await this.model.User.create(userCreateData);
+    const token = sign({ username: newUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+    return token;
   }
 
 
@@ -51,11 +71,7 @@ export class UserService {
   // @EggQualifier(EggType.APP)
   // mongoose: Connection;
   // 封装业务
-  async hello(userId: string): Promise<string> {
-    const result = { userId, handledBy: 'foo module' };
-    // this.logger.info('[hello] get result: %j', result);
-    return `hello, ${result.userId}`;
-  }
+
   // private getPersonModel() {
   //   const UserSchema = new Schema({
   //     name: { type: String },

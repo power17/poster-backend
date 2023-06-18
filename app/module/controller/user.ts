@@ -1,11 +1,12 @@
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, HTTPQuery, Context, EggContext, Middleware } from '@eggjs/tegg';
+import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, Context, EggContext, Middleware } from '@eggjs/tegg';
 import { UserService } from '@/module/service';
 import { IHelper } from 'egg';
 import { UserModelType } from 'app/model/user';
 import { sign } from 'jsonwebtoken';
 import jwt from '../../middleware/jwt';
-interface sendcodeParam {
-  phoneNumber: string
+interface loginQueryParam {
+  phoneNumber: string,
+  veriCode?: string,
 }
 
 
@@ -38,6 +39,10 @@ export const userErrorMessage = {
     errno: 101005,
     msg: '发送短信验证码过于频繁',
   },
+  veriCodeIncorrectFailInfo: {
+    errno: 101006,
+    msg: '验证码不正确',
+  },
 
 
 };
@@ -65,8 +70,8 @@ export class UserController {
     method: HTTPMethodEnum.POST,
     path: 'genVeriCode',
   })
-  async sendVerifyCode(@HTTPBody() req: any, @Context() ctx: EggContext) {
-    const errors = this.validateUserInput<sendcodeParam>(ctx, req, sendCodeRules);
+  async sendVerifyCode(@HTTPBody() req: loginQueryParam, @Context() ctx: EggContext) {
+    const errors = this.validateUserInput<loginQueryParam>(ctx, req, sendCodeRules);
     if (errors) {
 
       ctx.logger.warn(errors);
@@ -97,7 +102,7 @@ export class UserController {
       return ctx.helper.error({ errorType: 'userValidateFail', errDetail: errors });
     }
     // 检查用户名是否唯一
-    const user = await this.userService.findByUsername(req.username);
+    const user = await this.userService.findByOneParam(req.username);
     if (user) {
       return ctx.helper.error({ errorType: 'createUserAlreadyExist' });
     }
@@ -119,7 +124,7 @@ export class UserController {
     }
     // Check whether the user exist
     const { username, password } = req;
-    const user = await this.userService.findByUsername(username);
+    const user = await this.userService.findByOneParam(username);
     if (!user) {
       return ctx.helper.error({ errorType: 'loginCheckFailInfo' });
     }
@@ -139,14 +144,29 @@ export class UserController {
 
   }
   @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: 'loginByPhone',
+  })
+  async loginByPhone(@HTTPBody() req:loginQueryParam, @Context() ctx: EggContext) {
+    const { veriCode, phoneNumber } = req;
+    const veriCodeForRedis = await this.redis.get(`phoneVeriCode_${phoneNumber}`);
+    console.log(veriCode, veriCodeForRedis, 'jsfsdf');
+    if (veriCode !== veriCodeForRedis) {
+      return this.helper.error({ errorType: 'veriCodeIncorrectFailInfo' });
+    }
+    const token = await this.userService.loginByPhone(phoneNumber);
+    return ctx.helper.success({ res: token });
+
+  }
+
+  @HTTPMethod({
     method: HTTPMethodEnum.GET,
-    path: 'query',
+    path: 'getUserInfo',
   })
   @Middleware(jwt)
-  async findById(@HTTPQuery() id: string, @Context() ctx: EggContext) {
+  async findById(@Context() ctx: EggContext) {
     // const { username } = ctx.session;
-    console.log(id);
-    const userData = await this.userService.findByUsername(ctx.state.user.username);
+    const userData = await this.userService.findByOneParam(ctx.state.user.username);
     return ctx.helper.success({ res: { userData } });
   }
 }

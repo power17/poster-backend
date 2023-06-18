@@ -3,6 +3,7 @@ import { Schema } from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 
 export interface UserModelType {
+  type: 'email'| 'phone';
   username: string;
   password: string;
   email?: string;
@@ -16,8 +17,9 @@ export interface UserModelType {
 function initUserModel(app:Application) {
   const AutoIncrement = AutoIncrementFactory(app.mongoose);
   const UserSchema = new Schema<UserModelType>({
+    type: { type: String, default: 'email' },
     username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String },
     email: { type: String },
     nickname: { type: String },
     picture: { type: String },

@@ -26,13 +26,11 @@ export default async (ctx: EggContext, next: () => Promise<any>) => {
     return;
   }
   const { secret } = ctx.app.config.jwt;
-  console.log(secret, 'secret');
   if (!secret) {
     throw new Error('secret not privided');
   }
   try {
     const decode = verify(token, secret);
-    console.log(decode, 'decode');
     ctx.state.user = decode;
     await next();
   } catch (e) {
