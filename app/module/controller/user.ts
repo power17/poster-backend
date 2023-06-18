@@ -4,12 +4,18 @@ import { IHelper } from 'egg';
 import { UserModelType } from 'app/model/user';
 import { sign } from 'jsonwebtoken';
 import jwt from '../../middleware/jwt';
+interface sendcodeParam {
+  phoneNumber: string
+}
 
 
 // import { EggPlugin } from 'typings/app';
-const userCreatedRule = {
+const userCreatedRules = {
   username: 'email',
   password: { type: 'password', min: 8 },
+};
+const sendCodeRules = {
+  phoneNumber: { type: 'string', format: /^1[3-9]\d{9}$/, msg: '手机号码格式错误' },
 };
 export const userErrorMessage = {
   userValidateFail: {
@@ -26,8 +32,13 @@ export const userErrorMessage = {
   },
   loginValidateFail: {
     errno: 101004,
-    msg: '登录验证失败',
+    msg: '登录验证错误',
   },
+  sendVeriCodeFrequentlyFailINfo: {
+    errno: 101005,
+    msg: '发送短信验证码过于频繁',
+  },
+
 
 };
 
@@ -43,20 +54,44 @@ export class UserController {
   // validate:EggPlugin;
   @Inject()
   userService: UserService;
-  validateUserInput(ctx:EggContext, req:UserModelType) {
+  @Inject()
+  redis:any;
+  validateUserInput<T>(ctx:EggContext, req:T, rules: any) {
     // 参数检查
-    const errors = ctx.app.validator.validate(userCreatedRule, req);
+    const errors = ctx.app.validator.validate(rules, req);
     return errors;
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: 'genVeriCode',
+  })
+  async sendVerifyCode(@HTTPBody() req: any, @Context() ctx: EggContext) {
+    const errors = this.validateUserInput<sendcodeParam>(ctx, req, sendCodeRules);
+    if (errors) {
+
+      ctx.logger.warn(errors);
+      return ctx.helper.error({ errorType: 'sendVeriCodeFrequentlyFailINfo', errDetail: errors });
+    }
+    const { phoneNumber } = req;
+    const preVeriCode = await this.redis.get(`phoneVeriCode_${phoneNumber}`);
+    // 发送过于频繁
+    if (preVeriCode) {
+      return ctx.helper.error({ errorType: 'sendVeriCodeFrequentlyFailINfo' });
+    }
+    // [1000,10000)
+    const veriCode = (Math.floor(Math.random() * 9000) + 1000).toString();
+    await this.redis.set(`phoneVeriCode_${phoneNumber}`, veriCode, 'ex', 60);
+    return ctx.helper.success({ res: { veriCode } });
+
+
   }
 
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
     path: 'create',
   })
-  // @HTTPQuery({ name: 'userId' }) userId: string;
-  // @Context() ctx: EggType,
   async createByEmail(@HTTPBody() req:UserModelType, @Context() ctx: EggContext) {
-    const errors = this.validateUserInput(ctx, req);
+    const errors = this.validateUserInput(ctx, req, userCreatedRules);
     if (errors) {
       ctx.logger.warn(errors);
       return ctx.helper.error({ errorType: 'userValidateFail', errDetail: errors });
@@ -76,7 +111,7 @@ export class UserController {
     path: 'login',
   })
   async loginByEmail(@HTTPBody() req:UserModelType, @Context() ctx: EggContext) {
-    const errors = this.validateUserInput(ctx, req);
+    const errors = this.validateUserInput(ctx, req, userCreatedRules);
     //  check request param
     if (errors) {
       ctx.logger.warn(errors);
@@ -103,23 +138,6 @@ export class UserController {
 
 
   }
-  getTokenValue(ctx:EggContext) {
-    const { authorization } = ctx.header;
-    if (!authorization && !ctx.header) {
-      return false;
-    }
-    if (typeof authorization === 'string') {
-      const parts = authorization.trim().split(' ');
-      console.log(parts);
-      if (parts.length === 2) {
-        if (/^bearer$/i.test(parts[0])) {
-          return parts[1];
-        }
-      }
-    }
-    return false;
-
-  }
   @HTTPMethod({
     method: HTTPMethodEnum.GET,
     path: 'query',
@@ -130,7 +148,5 @@ export class UserController {
     console.log(id);
     const userData = await this.userService.findByUsername(ctx.state.user.username);
     return ctx.helper.success({ res: { userData } });
-
-
   }
 }
