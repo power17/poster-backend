@@ -1,4 +1,6 @@
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>;
@@ -35,6 +37,12 @@ export default (appInfo: EggAppInfo) => {
       csrf: { enable: false },
     },
     jwt: { secret: 'power123456' },
+    aliCloudConfig: {
+      accessKeyId: process.env.ALC_ACCESS_KEY,
+      accessKeySecret: process.env.ALC_SECRET_KEY,
+      endpoint: 'dysmsapi.aliyuncs.com',
+      name: 'sms_role@1363426906474430.onaliyun.com',
+    },
   };
 
   // the return config will combines to EggAppConfig

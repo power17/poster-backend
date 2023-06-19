@@ -1,9 +1,10 @@
 import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, Context, EggContext, Middleware } from '@eggjs/tegg';
 import { UserService } from '@/module/service';
-import { IHelper } from 'egg';
+import { IHelper, EggAppConfig } from 'egg';
 import { UserModelType } from 'app/model/user';
 import { sign } from 'jsonwebtoken';
 import jwt from '../../middleware/jwt';
+import { Redis } from 'ioredis';
 interface loginQueryParam {
   phoneNumber: string,
   veriCode?: string,
@@ -43,6 +44,10 @@ export const userErrorMessage = {
     errno: 101006,
     msg: '验证码不正确',
   },
+  sendSmsFailInfo: {
+    errno: 101007,
+    msg: '发送短信验证码失败',
+  },
 
 
 };
@@ -53,14 +58,16 @@ export const userErrorMessage = {
 export class UserController {
   @Inject()
   @EggQualifier(EggType.CONTEXT)
-  helper: IHelper;
+  private helper: IHelper;
   // @Inject()
   // @EggQualifier(EggType.CONTEXT)
   // validate:EggPlugin;
   @Inject()
-  userService: UserService;
+  private userService: UserService;
   @Inject()
-  redis:any;
+  private redis: Redis;
+  @Inject()
+  private config: EggAppConfig;
   validateUserInput<T>(ctx:EggContext, req:T, rules: any) {
     // 参数检查
     const errors = ctx.app.validator.validate(rules, req);
@@ -85,12 +92,18 @@ export class UserController {
     }
     // [1000,10000)
     const veriCode = (Math.floor(Math.random() * 9000) + 1000).toString();
-    await this.redis.set(`phoneVeriCode_${phoneNumber}`, veriCode, 'ex', 60);
-    return ctx.helper.success({ res: { veriCode } });
+    // 生产环境发送短信
+    if (this.config.env === 'prod') {
+      const res = await this.userService.sendSms(phoneNumber, veriCode);
+      console.log('短信验证码响应', res);
+      if (!res || res && res.body.code !== 'OK') {
+        return ctx.helper.error({ errorType: 'sendSmsFailInfo' });
+      }
+    }
 
-
+    await this.redis.set(`phoneVeriCode_${phoneNumber}`, veriCode, 'EX', 60);
+    return ctx.helper.success({ res: this.config.env === 'local' ? { veriCode } : null, msg: '验证码发送成功' });
   }
-
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
     path: 'create',
@@ -150,7 +163,6 @@ export class UserController {
   async loginByPhone(@HTTPBody() req:loginQueryParam, @Context() ctx: EggContext) {
     const { veriCode, phoneNumber } = req;
     const veriCodeForRedis = await this.redis.get(`phoneVeriCode_${phoneNumber}`);
-    console.log(veriCode, veriCodeForRedis, 'jsfsdf');
     if (veriCode !== veriCodeForRedis) {
       return this.helper.error({ errorType: 'veriCodeIncorrectFailInfo' });
     }

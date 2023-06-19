@@ -3,6 +3,8 @@ import { UserModelType } from 'app/model/user';
 import { sign } from 'jsonwebtoken';
 import { MongooseModels } from 'egg';
 import { EggAppConfig } from 'typings/app';
+import Dysmsapi20170525, * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525';
+import Util, * as $Util from '@alicloud/tea-util';
 
 
 // import { Connection } from 'mongoose';
@@ -20,6 +22,8 @@ export class UserService {
   private model:MongooseModels;
   @Inject()
   private config: EggAppConfig;
+  @Inject()
+  private aliClient: Dysmsapi20170525;
   async createByEmail(payload: UserModelType, ctx:EggContext) {
     const { username, password } = payload;
     // 加密
@@ -55,6 +59,23 @@ export class UserService {
     const newUser = await this.model.User.create(userCreateData);
     const token = sign({ username: newUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
     return token;
+  }
+  async sendSms(phoneNumber:string, veriCode:string) {
+    const sendSmsRequest = new $Dysmsapi20170525.SendSmsRequest({
+      phoneNumbers: phoneNumber,
+      signName: '海报设计系统',
+      templateCode: 'SMS_461410693',
+      templateParam: `{\"code\":\"${veriCode}\"}`,
+    });
+    const runtime = new $Util.RuntimeOptions({ });
+    try {
+      // 复制代码运行请自行打印 API 的返回值
+      const res = await this.aliClient.sendSmsWithOptions(sendSmsRequest, runtime);
+      return res;
+    } catch (error:any) {
+      // 如有需要，请打印 error
+      Util.assertAsString(error.message);
+    }
   }
 
 

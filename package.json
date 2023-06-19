@@ -20,6 +20,9 @@
     "clean": "tsc -b --clean"
   },
   "dependencies": {
+    "@alicloud/dysmsapi20170525": "2.0.23",
+    "@alicloud/openapi-client": "^0.4.6",
+    "@alicloud/tea-util": "^1.4.5",
     "@eggjs/tegg": "^3.5.2",
     "@eggjs/tegg-aop-plugin": "^3.5.2",
     "@eggjs/tegg-config": "^3.2.3",
@@ -27,12 +30,15 @@
     "@eggjs/tegg-eventbus-plugin": "^3.5.2",
     "@eggjs/tegg-plugin": "^3.5.2",
     "@eggjs/tegg-schedule-plugin": "^3.5.2",
+    "dotenv": "^16.3.1",
     "egg": "^3.15.0",
     "egg-bcrypt": "^1.1.0",
     "egg-mongoose": "^3.3.1",
+    "egg-redis": "^2.5.0",
     "egg-scripts": "^2.17.0",
     "egg-tracer": "^2.0.0",
     "egg-validate": "^2.0.2",
+    "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose-sequence": "^5.3.1"
   },
