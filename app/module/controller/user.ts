@@ -50,7 +50,7 @@ export const userErrorMessage = {
   },
   giteeLoginFailInfo: {
     errno: 101007,
-    msg: '发送短信验证码失败',
+    msg: 'gitee oauth授权失败',
   },
 
 
@@ -200,11 +200,14 @@ export class UserController {
   async oauthByGitee(@Context() ctx: EggContext) {
     const { code } = ctx.request.query;
     try {
-      const res = await this.userService.loginByGitee(ctx, code);
-      if (res) {
-        return ctx.helper.success({ res });
+      const token = await this.userService.loginByGitee(ctx, code);
+      console.log(token);
+      if (token) {
+        await ctx.render('success.nj', { token });
+        // return ctx.helper.success({ res });
       }
     } catch (e) {
+      console.log(e, 'e');
       return ctx.helper.error({ errorType: 'giteeLoginFailInfo' });
     }
 

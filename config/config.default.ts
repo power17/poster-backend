@@ -23,6 +23,17 @@ export default (appInfo: EggAppInfo) => {
       db: 0,
     },
   };
+  config.view = {
+    defaultViewEngine: 'nunjucks',
+    mapping: {
+      '.nj': 'nunjucks',
+    },
+  };
+  config.cors = {
+    origin: 'http://localhost:5173',
+    allowMethods: 'GET,POST,PUT,DELETE',
+  };
+
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,

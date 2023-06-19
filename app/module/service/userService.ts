@@ -105,7 +105,6 @@ export class UserService {
     const { data } = await ctx.curl<loginInfoType>(`${this.config.giteeOauthConfig.giteeUserInfo}?access_token=${token}`, {
       dataType: 'json',
     });
-    console.log(data, 'data');
     return data;
   }
   async loginByGitee(ctx: EggContext, code: string) {
