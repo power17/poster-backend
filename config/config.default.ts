@@ -1,5 +1,6 @@
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
 import * as dotenv from 'dotenv';
+import { join } from 'path';
 dotenv.config();
 
 export default (appInfo: EggAppInfo) => {
@@ -32,6 +33,18 @@ export default (appInfo: EggAppInfo) => {
   config.cors = {
     origin: 'http://localhost:5173',
     allowMethods: 'GET,POST,PUT,DELETE',
+  };
+  // 上传文件
+  config.multipart = {
+    mode: 'file',
+    tmpdir: join(appInfo.baseDir, 'uploads'),
+  };
+  // 静态文件
+  config.static = {
+    dir: [
+      { prefix: '/public', dir: join(appInfo.baseDir, 'app/public') },
+      { prefix: '/uploads', dir: join(appInfo.baseDir, 'uploads') },
+    ],
   };
 
   // add your special config in here

@@ -43,7 +43,8 @@
     "egg-view-nunjucks": "^2.3.0",
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.0",
-    "mongoose-sequence": "^5.3.1"
+    "mongoose-sequence": "^5.3.1",
+    "sharp": "^0.32.1"
   },
   "devDependencies": {
     "@eggjs/tsconfig": "1",

@@ -189,7 +189,7 @@ export class UserController {
     method: HTTPMethodEnum.GET,
     path: 'gitee/oauth',
   })
-  async oauto(@Context() ctx:EggContext) {
+  async oauth(@Context() ctx:EggContext) {
     const { cid, redirectURL } = this.config.giteeOauthConfig;
     ctx.redirect(`https://gitee.com/oauth/authorize?client_id=${cid}&redirect_uri=${redirectURL}&response_type=code`);
   }
