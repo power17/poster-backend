@@ -43,6 +43,14 @@ export default (appInfo: EggAppInfo) => {
       endpoint: 'dysmsapi.aliyuncs.com',
       name: 'sms_role@1363426906474430.onaliyun.com',
     },
+    giteeOauthConfig: {
+      cid: process.env.GITEE_CID,
+      secret: process.env.GITEE_SECRET,
+      redirectURL: 'http://127.0.0.1:7001/api/users/gitee/callback',
+      authUrl: 'https://gitee.com/oauth/token',
+      giteeUserInfo: 'https://gitee.com/api/v5/user',
+    },
+
   };
 
   // the return config will combines to EggAppConfig

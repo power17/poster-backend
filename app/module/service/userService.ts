@@ -6,10 +6,15 @@ import { EggAppConfig } from 'typings/app';
 import Dysmsapi20170525, * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525';
 import Util, * as $Util from '@alicloud/tea-util';
 
+interface loginInfoType {
+  'id': string,
+  'login': string,
+  'name': string,
+  'avatar_url': string,
+  'url': string,
+  'email': string,
 
-// import { Connection } from 'mongoose';
-// import { Connection } from 'mongoose';
-// import { Schema } from 'mongoose';
+}
 
 @SingletonProto({
   // 如果需要在上层使用，需要把 accessLevel 显示声明为 public
@@ -29,6 +34,7 @@ export class UserService {
     // 加密
     const hash = await ctx.genHash(password);
     const userCreatedData: Partial<UserModelType> = {
+      type: 'email',
       username,
       password: hash,
       email: username,
@@ -76,6 +82,55 @@ export class UserService {
       // 如有需要，请打印 error
       Util.assertAsString(error.message);
     }
+  }
+  async getAccessToken(ctx: EggContext, code: string) {
+    const { cid, secret, redirectURL, authUrl } = this.config.giteeOauthConfig;
+    const res = await ctx.curl(authUrl, {
+      method: 'POST',
+      contentType: 'json',
+      dataType: 'json',
+      data: {
+        code,
+        client_id: cid,
+        client_secret: secret,
+        redirect_uri: redirectURL,
+        grant_type: 'authorization_code',
+
+      },
+    });
+    ctx.app.logger.info(res.data.access_token);
+    return res.data.access_token;
+  }
+  async getGiteeUserInfo(ctx: EggContext, token: string) {
+    const { data } = await ctx.curl<loginInfoType>(`${this.config.giteeOauthConfig.giteeUserInfo}?access_token=${token}`, {
+      dataType: 'json',
+    });
+    console.log(data, 'data');
+    return data;
+  }
+  async loginByGitee(ctx: EggContext, code: string) {
+    const accessToken = await this.getAccessToken(ctx, code);
+    const userInfo = await this.getGiteeUserInfo(ctx, accessToken);
+    const { id, name, avatar_url, email } = userInfo;
+    const stringId = id.toString();
+    const existUser = await this.findByOneParam(`gitee#${stringId}`);
+    if (existUser) {
+      const token = sign({ username: existUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+      return token;
+    }
+    // 假如不存在
+    const userCreateData:Partial<UserModelType> = {
+      oauthId: stringId,
+      provider: 'gitee',
+      username: `gitee#${stringId}`,
+      email,
+      nickname: name,
+      type: 'oauth',
+      picture: avatar_url,
+    };
+    const newUser = await this.model.User.create(userCreateData);
+    const token = sign({ username: newUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+    return token;
   }
 
 

@@ -3,13 +3,16 @@ import { Schema } from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 
 export interface UserModelType {
-  type: 'email'| 'phone';
+  type: 'email'| 'phone'| 'oauth';
+  provider?: 'gitee';
+  oauthId?: string;
   username: string;
   password: string;
   email?: string;
   nickname?: string;
   picture?: string;
   phoneNumber?: string;
+
   createAt:Date;
   updateAt: Date;
 
@@ -17,13 +20,15 @@ export interface UserModelType {
 function initUserModel(app:Application) {
   const AutoIncrement = AutoIncrementFactory(app.mongoose);
   const UserSchema = new Schema<UserModelType>({
-    type: { type: String, default: 'email' },
+    type: { type: String, default: 'email', require: true },
     username: { type: String, required: true, unique: true },
     password: { type: String },
     email: { type: String },
     nickname: { type: String },
     picture: { type: String },
     phoneNumber: { type: String },
+    provider: { type: String },
+    oauthId: { type: String },
   }, {
     timestamps: { currentTime: () => new Date(), createdAt: 'createdAt', updatedAt: 'updatedAt' },
     toJSON: {

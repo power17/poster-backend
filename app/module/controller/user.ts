@@ -48,6 +48,10 @@ export const userErrorMessage = {
     errno: 101007,
     msg: '发送短信验证码失败',
   },
+  giteeLoginFailInfo: {
+    errno: 101007,
+    msg: '发送短信验证码失败',
+  },
 
 
 };
@@ -180,5 +184,29 @@ export class UserController {
     // const { username } = ctx.session;
     const userData = await this.userService.findByOneParam(ctx.state.user.username);
     return ctx.helper.success({ res: { userData } });
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.GET,
+    path: 'gitee/oauth',
+  })
+  async oauto(@Context() ctx:EggContext) {
+    const { cid, redirectURL } = this.config.giteeOauthConfig;
+    ctx.redirect(`https://gitee.com/oauth/authorize?client_id=${cid}&redirect_uri=${redirectURL}&response_type=code`);
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.GET,
+    path: 'gitee/callback',
+  })
+  async oauthByGitee(@Context() ctx: EggContext) {
+    const { code } = ctx.request.query;
+    try {
+      const res = await this.userService.loginByGitee(ctx, code);
+      if (res) {
+        return ctx.helper.success({ res });
+      }
+    } catch (e) {
+      return ctx.helper.error({ errorType: 'giteeLoginFailInfo' });
+    }
+
   }
 }
