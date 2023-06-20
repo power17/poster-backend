@@ -17,7 +17,7 @@ export class UtilController {
   private logger: EggLogger;
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
-    path: 'upload',
+    path: '/upload',
   })
   // file 模式上传文件
   async upload(@Context() ctx:EggContext) {
@@ -87,12 +87,15 @@ export class UtilController {
 
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
-    path: '/uploadsMulpartsFile',
+    path: '/uploadsMulpartsImg',
   })
   // 多文件上传阿里云
-  async uploadsMulpartsFile(@Context() ctx:EggContext) {
+  async uploadsMulpartsImg(@Context() ctx:EggContext) {
+    // console.log(1111);
     // 获取数据流
-    const parts = ctx.multipart();
+    const { fileSize } = this.config.multipart;
+    const parts = ctx.multipart({ limits: { fileSize: fileSize as number } });
+
     let part: string[] | FileStream;
     const urls: string[] = [];
     while ((part = await parts())) {
@@ -102,12 +105,18 @@ export class UtilController {
         try {
           const stream = part as FileStream;
           const { name, ext } = parse(stream.filename);
-          const path = join('/poster', name + nanoid(6) + ext);
+
+          const ossPath = join('/poster', name + nanoid(6) + ext);
           // 上传
-          const { url } = await ctx.oss.put(path, stream);
+          const { url } = await ctx.oss.put(ossPath, stream);
+          if (part.truncated) {
+            await ctx.oss.delete(ossPath);
+            return ctx.helper.error({ errorType: 'uploadFileSizeLimitFailInfo', errDetail: `文件大小超出${fileSize as number / 1024}kb` });
+          }
           urls.push(url);
 
         } catch (e) {
+          console.log(e);
           await sendToWormhole(part);
           return ctx.helper.error({ errorType: 'uploadsMultpartFileFialInfo' });
         }

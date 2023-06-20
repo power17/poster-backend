@@ -11,7 +11,7 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + '_1686755626183_2674';
 
   // add your egg config in here
-  config.middleware = [];
+  config.middleware = [ 'myLogger', 'customError' ];
   // 用户密码加密
   config.bcrypt = {
     saltRounds: 10,
@@ -39,6 +39,7 @@ export default (appInfo: EggAppInfo) => {
     // mode: 'stream',
     whitelist: [ '.jpeg', '.png', '.gif', '.webp', '.jpg' ],
     tmpdir: join(appInfo.baseDir, 'uploads'),
+    fileSize: '300kb',
   };
   // 静态文件
   config.static = {

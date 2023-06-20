@@ -45,6 +45,14 @@ export const userErrorMessage = {
     errno: 101010,
     msg: '多文件上传阿里云存储失败',
   },
+  uploadFileFormatFailInfo: {
+    errno: 101011,
+    msg: '上传文件格式不正确',
+  },
+  uploadFileSizeLimitFailInfo: {
+    errno: 101012,
+    msg: '上传文件大小超出限制',
+  },
 
 
 };
