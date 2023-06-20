@@ -19,42 +19,7 @@ const userCreatedRules = {
 const sendCodeRules = {
   phoneNumber: { type: 'string', format: /^1[3-9]\d{9}$/, msg: '手机号码格式错误' },
 };
-export const userErrorMessage = {
-  userValidateFail: {
-    errno: 101001,
-    msg: '请求用户接口参数有误',
-  },
-  createUserAlreadyExist: {
-    errno: 101002,
-    msg: '该邮箱已经被注册，请直接登录',
-  },
-  loginCheckFailInfo: {
-    errno: 101003,
-    msg: '用户不存在或者密码不正确',
-  },
-  loginValidateFail: {
-    errno: 101004,
-    msg: '登录验证错误',
-  },
-  sendVeriCodeFrequentlyFailINfo: {
-    errno: 101005,
-    msg: '发送短信验证码过于频繁',
-  },
-  veriCodeIncorrectFailInfo: {
-    errno: 101006,
-    msg: '验证码不正确',
-  },
-  sendSmsFailInfo: {
-    errno: 101007,
-    msg: '发送短信验证码失败',
-  },
-  giteeLoginFailInfo: {
-    errno: 101007,
-    msg: 'gitee oauth授权失败',
-  },
 
-
-};
 
 @HTTPController({
   path: '/api/users',

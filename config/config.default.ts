@@ -36,7 +36,8 @@ export default (appInfo: EggAppInfo) => {
   };
   // 上传文件
   config.multipart = {
-    mode: 'file',
+    // mode: 'stream',
+    whitelist: [ '.jpeg', '.png', '.gif', '.webp', '.jpg' ],
     tmpdir: join(appInfo.baseDir, 'uploads'),
   };
   // 静态文件
@@ -45,6 +46,17 @@ export default (appInfo: EggAppInfo) => {
       { prefix: '/public', dir: join(appInfo.baseDir, 'app/public') },
       { prefix: '/uploads', dir: join(appInfo.baseDir, 'uploads') },
     ],
+  };
+  // 阿里oss
+  config.oss = {
+    client: {
+      accessKeyId: process.env.ALC_ACCESS_KEY || '',
+      accessKeySecret: process.env.ALC_SECRET_KEY || '',
+      bucket: 'poster-design',
+      endpoint: 'oss-cn-shenzhen.aliyuncs.com',
+
+    },
+
   };
 
   // add your special config in here

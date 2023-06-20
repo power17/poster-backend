@@ -1,4 +1,53 @@
-import { userErrorMessage } from '@/module/controller/user';
+export const userErrorMessage = {
+  userValidateFail: {
+    errno: 101001,
+    msg: '请求用户接口参数有误',
+  },
+  createUserAlreadyExist: {
+    errno: 101002,
+    msg: '该邮箱已经被注册，请直接登录',
+  },
+  loginCheckFailInfo: {
+    errno: 101003,
+    msg: '用户不存在或者密码不正确',
+  },
+  loginValidateFail: {
+    errno: 101004,
+    msg: '登录验证错误',
+  },
+  sendVeriCodeFrequentlyFailINfo: {
+    errno: 101005,
+    msg: '发送短信验证码过于频繁',
+  },
+  veriCodeIncorrectFailInfo: {
+    errno: 101006,
+    msg: '验证码不正确',
+  },
+  sendSmsFailInfo: {
+    errno: 101007,
+    msg: '发送短信验证码失败',
+  },
+  giteeLoginFailInfo: {
+    errno: 101008,
+    msg: 'gitee oauth授权失败',
+  },
+
+  // utils
+  uploadByStreamFailInfo: {
+    errno: 101009,
+    msg: '文件流写入失败',
+  },
+  uploadOssFailInfo: {
+    errno: 101009,
+    msg: '上传阿里云存储失败',
+  },
+  uploadsMultpartFileFialInfo: {
+    errno: 101010,
+    msg: '多文件上传阿里云存储失败',
+  },
+
+
+};
 interface RespType {
   res? : any;
   msg? : string

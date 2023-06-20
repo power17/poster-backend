@@ -2,6 +2,7 @@ import { UserModelType } from 'app/model/user';
 import 'egg';
 import { Connection, Model } from 'mongoose';
 import { Interface } from 'readline';
+import { Options } from '@types/ali-oss'
 
 declare module 'egg' {
     // app 自定义类型
@@ -20,6 +21,9 @@ declare module 'egg' {
     interface EggAppConfig {
         bcrypt: {
             saltRounds: number
+        }
+        oss: {
+            client?: Options
         }
     }
 

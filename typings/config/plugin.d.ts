@@ -25,6 +25,10 @@ import 'egg-tracer';
 import 'egg-mongoose';
 import 'egg-validate';
 import 'egg-bcrypt';
+import 'egg-redis';
+import 'egg-view-nunjucks';
+import 'egg-cors';
+import 'egg-oss';
 import { EggPluginItem } from 'egg';
 declare module 'egg' {
   interface EggPlugin {
@@ -50,5 +54,9 @@ declare module 'egg' {
     mongoose?: EggPluginItem;
     validate?: EggPluginItem;
     bcrypt?: EggPluginItem;
+    redis?: EggPluginItem;
+    nunjucks?: EggPluginItem;
+    cors?: EggPluginItem;
+    oss?: EggPluginItem;
   }
 }

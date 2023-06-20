@@ -5,6 +5,7 @@
     "paths": {
       "@/module/*": ["app/module/*"]
     },
-    "baseUrl": "."
+    "baseUrl": ".",
+    "ignoreDeprecations": "5.0"
   }
 }
