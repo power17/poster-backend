@@ -62,8 +62,8 @@ export default (appInfo: EggAppInfo) => {
   // jwt
   config.jwt = {
     enable: true,
-    secret: 'power2',
-    match: [ '/api/users/getUserInfo' ],
+    secret: process.env.JWT_SECRET || '',
+    match: [ '/api/users/getUserInfo', '/api/work' ],
   };
 
   // add your special config in here

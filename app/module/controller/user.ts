@@ -121,7 +121,7 @@ export class UserController {
     // Register claims 注册相关信息
     // public claims 公共信息 should be unique like email, address or phone_number
     // genarate token sign
-    const token = this.jwt.sign({ username: user.username }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
+    const token = this.jwt.sign({ username: user.username, _di: user._id }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
     // ctx.cookies.set('username', user.username, { encrypt: true });
     // ctx.session.username = user.username;
     return ctx.helper.success({ res: { token }, msg: '登录成功' });
