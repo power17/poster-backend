@@ -1,3 +1,9 @@
+export const httpErrorMessage = {
+  httpStatusError401: {
+    errno: 100401,
+    msg: '401 Unauthorized响应状态代码表示客户端请求尚未完成，因为它缺少所请求资源的有效身份验证凭据',
+  },
+};
 export const userErrorMessage = {
 
   userValidateFail: {
@@ -67,13 +73,15 @@ const globalErrorMessage = {
     errno: 101000,
     msg: '后端接口报错',
   },
+  ...httpErrorMessage,
   ...userErrorMessage,
   ...utilErrorMessage,
 };
+export type globalErrorMessageType = keyof(typeof globalErrorMessage);
 interface ErrorRespType {
   // errno: number;
   // msg?: string;
-  errorType: keyof(typeof globalErrorMessage),
+  errorType: globalErrorMessageType,
   errDetail?: any
 }
 export default {

@@ -5,11 +5,12 @@ export default () => {
     try {
       await next();
     } catch (error) {
-      console.log(error);
       const e = error as any;
-      console.log(error);
+      // console.log(error, 121212121);
+
       if (e && e.status === 401) {
-        return ctx.helper.error({ errorType: 'loginValidateFail', errDetail: e.message });
+        ctx.body = ctx.helper.error({ errorType: 'httpStatusError401', errDetail: e.message });
+        return;
         // 图片格式接口
       } else if (ctx.path === '/api/utils/uploadsMulpartsImg') {
         if (e && e.status === 400) {
