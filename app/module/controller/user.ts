@@ -1,10 +1,11 @@
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, Context, EggContext, Middleware } from '@eggjs/tegg';
+import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, Context, EggContext } from '@eggjs/tegg';
 import { UserService } from '@/module/service';
 import { IHelper, EggAppConfig } from 'egg';
 import { UserModelType } from 'app/model/user';
-import { sign } from 'jsonwebtoken';
-import jwt from '../../middleware/jwt';
+// import * as jsonwebtoken from 'jsonwebtoken';
+// import jwt from '../../middleware/jwt';
 import { Redis } from 'ioredis';
+import { Application } from 'typings/app';
 interface loginQueryParam {
   phoneNumber: string,
   veriCode?: string,
@@ -37,6 +38,8 @@ export class UserController {
   private redis: Redis;
   @Inject()
   private config: EggAppConfig;
+  @Inject()
+  private jwt: Application['jwt'];
   validateUserInput<T>(ctx:EggContext, req:T, rules: any) {
     // 参数检查
     const errors = ctx.app.validator.validate(rules, req);
@@ -118,7 +121,7 @@ export class UserController {
     // Register claims 注册相关信息
     // public claims 公共信息 should be unique like email, address or phone_number
     // genarate token sign
-    const token = sign({ username: user.username }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
+    const token = this.jwt.sign({ username: user.username }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
     // ctx.cookies.set('username', user.username, { encrypt: true });
     // ctx.session.username = user.username;
     return ctx.helper.success({ res: { token }, msg: '登录成功' });
@@ -144,9 +147,10 @@ export class UserController {
     method: HTTPMethodEnum.GET,
     path: 'getUserInfo',
   })
-  @Middleware(jwt)
+  // @Middleware(jwt)
   async findById(@Context() ctx: EggContext) {
     // const { username } = ctx.session;
+    console.log(ctx.state.user);
     const userData = await this.userService.findByOneParam(ctx.state.user.username);
     return ctx.helper.success({ res: { userData } });
   }
@@ -166,7 +170,6 @@ export class UserController {
     const { code } = ctx.request.query;
     try {
       const token = await this.userService.loginByGitee(ctx, code);
-      console.log(token);
       if (token) {
         await ctx.render('success.nj', { token });
         // return ctx.helper.success({ res });

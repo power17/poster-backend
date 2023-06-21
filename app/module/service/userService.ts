@@ -1,6 +1,6 @@
 import { SingletonProto, AccessLevel, Inject, EggQualifier, EggType, ContextProto, EggContext } from '@eggjs/tegg';
 import { UserModelType } from 'app/model/user';
-import { sign } from 'jsonwebtoken';
+// import { sign } from 'jsonwebtoken';
 import { MongooseModels } from 'egg';
 import { EggAppConfig } from 'typings/app';
 import Dysmsapi20170525, * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525';
@@ -29,6 +29,8 @@ export class UserService {
   private config: EggAppConfig;
   @Inject()
   private aliClient: Dysmsapi20170525;
+  @Inject()
+  private jwt: any;
   async createByEmail(payload: UserModelType, ctx:EggContext) {
     const { username, password } = payload;
     // 加密
@@ -53,7 +55,8 @@ export class UserService {
   async loginByPhone(phoneNumber: string) {
     const user = await this.findByOneParam(phoneNumber);
     if (user) {
-      const token = sign({ phoneNumber: user.phoneNumber }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+      // const token = 'fsdf';
+      const token = this.jwt.sign({ username: user.phoneNumber }, this.config.jwt.secret, { expiresIn: 60 * 60 });
       return token;
     }
     const userCreateData: Partial<UserModelType> = {
@@ -63,7 +66,7 @@ export class UserService {
       type: 'phone',
     };
     const newUser = await this.model.User.create(userCreateData);
-    const token = sign({ username: newUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+    const token = this.jwt.sign({ username: newUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
     return token;
   }
   async sendSms(phoneNumber:string, veriCode:string) {
@@ -114,7 +117,7 @@ export class UserService {
     const stringId = id.toString();
     const existUser = await this.findByOneParam(`gitee#${stringId}`);
     if (existUser) {
-      const token = sign({ username: existUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+      const token = this.jwt.sign({ username: existUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
       return token;
     }
     // 假如不存在
@@ -128,7 +131,7 @@ export class UserService {
       picture: avatar_url,
     };
     const newUser = await this.model.User.create(userCreateData);
-    const token = sign({ username: newUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
+    const token = this.jwt.sign({ username: newUser.username }, this.config.jwt.secret, { expiresIn: 60 * 60 });
     return token;
   }
 

@@ -11,7 +11,7 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + '_1686755626183_2674';
 
   // add your egg config in here
-  config.middleware = [ 'myLogger', 'customError' ];
+  config.middleware = [ 'myLogger' ];
   // 用户密码加密
   config.bcrypt = {
     saltRounds: 10,
@@ -59,6 +59,12 @@ export default (appInfo: EggAppInfo) => {
     },
 
   };
+  // jwt
+  config.jwt = {
+    enable: true,
+    secret: 'power2',
+    match: [ '/api/users/getUserInfo' ],
+  };
 
   // add your special config in here
   const bizConfig = {
@@ -73,7 +79,6 @@ export default (appInfo: EggAppInfo) => {
     security: {
       csrf: { enable: false },
     },
-    jwt: { secret: 'power123456' },
     aliCloudConfig: {
       accessKeyId: process.env.ALC_ACCESS_KEY,
       accessKeySecret: process.env.ALC_SECRET_KEY,

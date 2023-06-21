@@ -29,6 +29,7 @@ import 'egg-redis';
 import 'egg-view-nunjucks';
 import 'egg-cors';
 import 'egg-oss';
+import 'egg-jwt';
 import { EggPluginItem } from 'egg';
 declare module 'egg' {
   interface EggPlugin {
@@ -58,5 +59,6 @@ declare module 'egg' {
     nunjucks?: EggPluginItem;
     cors?: EggPluginItem;
     oss?: EggPluginItem;
+    jwt?: EggPluginItem;
   }
 }

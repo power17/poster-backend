@@ -1,4 +1,9 @@
 export const userErrorMessage = {
+  // common
+  serviceErrorInfo: {
+    errno: 101000,
+    msg: '后端接口报错',
+  },
   userValidateFail: {
     errno: 101001,
     msg: '请求用户接口参数有误',
