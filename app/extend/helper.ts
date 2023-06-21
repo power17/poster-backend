@@ -1,9 +1,5 @@
 export const userErrorMessage = {
-  // common
-  serviceErrorInfo: {
-    errno: 101000,
-    msg: '后端接口报错',
-  },
+
   userValidateFail: {
     errno: 101001,
     msg: '请求用户接口参数有误',
@@ -36,7 +32,8 @@ export const userErrorMessage = {
     errno: 101008,
     msg: 'gitee oauth授权失败',
   },
-
+};
+const utilErrorMessage = {
   // utils
   uploadByStreamFailInfo: {
     errno: 101009,
@@ -65,12 +62,19 @@ interface RespType {
   res? : any;
   msg? : string
 }
+const globalErrorMessage = {
+  serviceErrorInfo: {
+    errno: 101000,
+    msg: '后端接口报错',
+  },
+  ...userErrorMessage,
+  ...utilErrorMessage,
+};
 interface ErrorRespType {
   // errno: number;
   // msg?: string;
-  errorType: keyof(typeof userErrorMessage),
+  errorType: keyof(typeof globalErrorMessage),
   errDetail?: any
-
 }
 export default {
   success({ res, msg }:RespType) {
@@ -81,7 +85,7 @@ export default {
     };
   },
   error({ errorType, errDetail }: ErrorRespType) {
-    const { errno, msg } = userErrorMessage[errorType];
+    const { errno, msg } = globalErrorMessage[errorType];
     return {
       errno,
       msg: msg ? msg : '请求错误',
