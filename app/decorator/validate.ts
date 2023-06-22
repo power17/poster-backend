@@ -13,8 +13,8 @@ export default function validateInput(rules: any, errorType: globalErrorMessageT
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const ctx = args[0] as EggContext;
-      console.log(ctx.request.body, 'ctx');
-      const errors = ctx.app.validator.validate(rules, !isEmptyObject(ctx.request.body) || ctx.query);
+      const input = isEmptyObject(ctx.request.body) ? ctx.query : ctx.request.body;
+      const errors = ctx.app.validator.validate(rules, input);
       if (errors) {
 
         ctx.body = ctx.helper.error({ errorType, errDetail: errors });

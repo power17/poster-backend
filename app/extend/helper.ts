@@ -62,7 +62,12 @@ const utilErrorMessage = {
     msg: '上传文件大小超出限制',
   },
 
-
+};
+const workErrorMessage = {
+  pressisonUpdateWorkFail: {
+    errno: 103012,
+    msg: '权限不足，无法更改别人作品',
+  },
 };
 interface RespType {
   res? : any;
@@ -73,9 +78,14 @@ const globalErrorMessage = {
     errno: 101000,
     msg: '后端接口报错',
   },
+  inputVaildateFailInfo: {
+    errno: 101000,
+    msg: '客户端输入参数有误',
+  },
   ...httpErrorMessage,
   ...userErrorMessage,
   ...utilErrorMessage,
+  ...workErrorMessage,
 };
 export type globalErrorMessageType = keyof(typeof globalErrorMessage);
 interface ErrorRespType {

@@ -7,7 +7,7 @@ export default () => {
     } catch (error) {
       const e = error as any;
       // console.log(error, 121212121);
-
+      ctx.logger.error(e);
       if (e && e.status === 401) {
         ctx.body = ctx.helper.error({ errorType: 'httpStatusError401', errDetail: e.message });
         return;

@@ -23,4 +23,36 @@ Wed Jun 21 2023 23:18:54 GMT+0800 (中国标准时间) -- POST --/api/work/creat
   Thu Jun 22 2023 01:07:41 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title=1 -- 13ms
   Thu Jun 22 2023 01:07:51 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title=1hi -- 4ms
   Thu Jun 22 2023 01:08:32 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title= -- 9ms
+  Thu Jun 22 2023 07:49:49 GMT+0800 (中国标准时间) -- POST --/api/users/genVeriCode -- 3ms
+  Thu Jun 22 2023 07:50:02 GMT+0800 (中国标准时间) -- POST --/api/users/loginByPhone -- 49ms
+  Thu Jun 22 2023 07:53:02 GMT+0800 (中国标准时间) -- POST --/api/users/loginByPhone -- 1ms
+  Thu Jun 22 2023 07:53:04 GMT+0800 (中国标准时间) -- POST --/api/users/loginByPhone -- 1ms
+  Thu Jun 22 2023 07:53:06 GMT+0800 (中国标准时间) -- POST --/api/users/genVeriCode -- 4ms
+  Thu Jun 22 2023 07:53:20 GMT+0800 (中国标准时间) -- POST --/api/users/loginByPhone -- 32ms
+  Thu Jun 22 2023 07:53:35 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title= -- 36ms
+  Thu Jun 22 2023 07:54:00 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title=&isTemplate=fsfd -- 6ms
+  Thu Jun 22 2023 07:54:06 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title=&isTemplate=1 -- 4ms
+  Thu Jun 22 2023 07:54:10 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title=&isTemplate= -- 8ms
+  Thu Jun 22 2023 08:32:32 GMT+0800 (中国标准时间) -- POST --/api/users/genVeriCode -- 3ms
+  Thu Jun 22 2023 08:32:43 GMT+0800 (中国标准时间) -- POST --/api/users/loginByPhone -- 16ms
+  Thu Jun 22 2023 08:33:05 GMT+0800 (中国标准时间) -- POST --/api/work/createWork -- 2ms
+  Thu Jun 22 2023 08:33:11 GMT+0800 (中国标准时间) -- POST --/api/work/createWork -- 1ms
+  Thu Jun 22 2023 08:33:38 GMT+0800 (中国标准时间) -- POST --/api/work/createWork -- 1ms
+  Thu Jun 22 2023 08:36:04 GMT+0800 (中国标准时间) -- POST --/api/work/createWork -- 2ms
+  Thu Jun 22 2023 08:37:38 GMT+0800 (中国标准时间) -- POST --/api/work/createWork -- 18ms
+  Thu Jun 22 2023 08:37:47 GMT+0800 (中国标准时间) -- POST --/api/work/createWork -- 17ms
+  Thu Jun 22 2023 08:39:29 GMT+0800 (中国标准时间) -- GET --/api/work/queryList?pageIndex=0&pageSize=5&title=&isTemplate= -- 24ms
+  Thu Jun 22 2023 08:41:37 GMT+0800 (中国标准时间) -- POST --/api/work/updateWork/71?A -- 0ms
+  Thu Jun 22 2023 08:43:04 GMT+0800 (中国标准时间) -- POST --/api/work/updateWork/71?A -- 1ms
+  Thu Jun 22 2023 08:43:10 GMT+0800 (中国标准时间) -- POST --/api/work/updateWork/71?A -- 0ms
+  Thu Jun 22 2023 08:43:20 GMT+0800 (中国标准时间) -- POST --/api/work/updateWork/71?A -- 0ms
+  Thu Jun 22 2023 08:56:31 GMT+0800 (中国标准时间) -- POST --/api/users/genVeriCode -- 7ms
+  Thu Jun 22 2023 08:56:42 GMT+0800 (中国标准时间) -- POST --/api/users/loginByPhone -- 17ms
+  Thu Jun 22 2023 09:18:41 GMT+0800 (中国标准时间) -- POST --/api/work/updateWork/71 -- 16ms
+  Thu Jun 22 2023 09:18:55 GMT+0800 (中国标准时间) -- POST --/api/work/updateWork/71 -- 16ms
+  Thu Jun 22 2023 09:19:34 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWork/71 -- 0ms
+  Thu Jun 22 2023 09:19:49 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWork/71 -- 0ms
+  Thu Jun 22 2023 09:20:40 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWork/71 -- 0ms
+  Thu Jun 22 2023 09:21:15 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWork/71 -- 0ms
+  Thu Jun 22 2023 09:21:17 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWork/71 -- 11ms
   
