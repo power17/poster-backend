@@ -6,6 +6,7 @@ import { extname, join, parse } from 'path';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
 import sendToWormhole from 'stream-wormhole';
+import { UtilsService } from '../service/utilsService';
 
 @HTTPController({
   path: '/api/utils',
@@ -15,6 +16,32 @@ export class UtilController {
   private config: EggAppConfig;
   @Inject()
   private logger: EggLogger;
+  @Inject()
+  private utilsService: UtilsService;
+  splitIdAndUuid(str = '') {
+    const result = { id: '', uuid: '' };
+    if (!str) return result;
+    const firstDashIndex = str.indexOf('-');
+    if (firstDashIndex < 0) return result;
+    result.id = str.slice(0, firstDashIndex);
+    result.uuid = str.slice(firstDashIndex + 1);
+    return result;
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.GET,
+    path: '/pages/p/:idAndUuid',
+  })
+  async rendH5Page(@Context() ctx:EggAppConfig) {
+    // id-uuid
+    const { idAndUuid } = ctx.params;
+    const query = this.splitIdAndUuid(idAndUuid);
+    try {
+      const pageData = await this.utilsService.renderToPageData(query);
+      await ctx.render('page.nj', pageData);
+    } catch (e) {
+      return ctx.helper.error({ errorType: 'workNotExitFailInfo' });
+    }
+  }
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
     path: '/upload',

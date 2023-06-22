@@ -68,7 +68,7 @@ export default (appInfo: EggAppInfo) => {
 
   // add your special config in here
   const bizConfig = {
-    h5baseUrl: 'http://localhos:5173/api/pages',
+    h5baseUrl: 'http://localhost:7001/api/utils/pages',
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     mongoose: { client: {
       url: 'mongodb://localhost:27017/poster',

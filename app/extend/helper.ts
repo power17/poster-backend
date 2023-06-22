@@ -42,24 +42,28 @@ export const userErrorMessage = {
 const utilErrorMessage = {
   // utils
   uploadByStreamFailInfo: {
-    errno: 101009,
+    errno: 102009,
     msg: '文件流写入失败',
   },
   uploadOssFailInfo: {
-    errno: 101009,
+    errno: 102009,
     msg: '上传阿里云存储失败',
   },
   uploadsMultpartFileFialInfo: {
-    errno: 101010,
+    errno: 102010,
     msg: '多文件上传阿里云存储失败',
   },
   uploadFileFormatFailInfo: {
-    errno: 101011,
+    errno: 102011,
     msg: '上传文件格式不正确',
   },
   uploadFileSizeLimitFailInfo: {
-    errno: 101012,
+    errno: 102012,
     msg: '上传文件大小超出限制',
+  },
+  workNotExitFailInfo: {
+    errno: 102013,
+    msg: '作品不存在',
   },
 
 };
