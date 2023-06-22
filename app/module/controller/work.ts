@@ -3,6 +3,7 @@ import { WorkService } from '../service/workService';
 import { WorkProps } from '../../model/work';
 import { Application, IHelper } from 'typings/app';
 import validate from 'app/decorator/validate';
+import checkPremission from 'app/decorator/checkPremission';
 const workRule = {
   title: 'string',
 };
@@ -70,29 +71,12 @@ export class workController {
     const res = await this.workService.queryList(listCondition);
     return ctx.helper.success({ res });
   }
-  async checkPremission(ctx:EggContext, id:number) {
-    try {
-      const userId = ctx.state.user._id;
-
-      const certainWork = await ctx.model.Work.findOne({ id });
-
-      if (!certainWork) { return false; }
-      ctx.logger.info(certainWork.user.toString() === userId, typeof userId);
-      return certainWork.user.toString() === userId;
-    } catch (e) {
-      ctx.logger.error(e);
-    }
-  }
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
     path: '/updateWork/:id',
   })
+  @checkPremission('Work', 'pressisonUpdateWorkFail')
   async updateWork(@Context() ctx:EggContext, @HTTPParam() id: string, @HTTPBody() payload:Partial<WorkProps>) {
-    const permission = await this.checkPremission(ctx, Number(id));
-    ctx.logger.info(permission);
-    if (!permission) {
-      return ctx.helper.error({ errorType: 'pressisonUpdateWorkFail' });
-    }
     const res = await ctx.model.Work.findOneAndUpdate({ id: Number(id) }, payload, { new: true }).lean();
     ctx.logger.info(res, 'res');
     return ctx.helper.success({ res });
@@ -101,13 +85,34 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/deleteWork/:id',
   })
+  @checkPremission('Work', 'pressisonUpdateWorkFail')
   async deleteWork(@Context() ctx:EggContext, @HTTPParam() id: number) {
-    const permission = this.checkPremission(ctx, Number(id));
-    if (!permission) {
-      return ctx.helper.error({ errorType: 'pressisonUpdateWorkFail' });
-    }
     const res = await ctx.model.Work.findOneAndDelete({ id: Number(id) }).select('id _id title').lean();
     return ctx.helper.success({ res });
+  }
+
+
+  async public(ctx:EggContext, isTemplate: boolean) {
+    const url = await this.workService.public(Number(ctx.params.id), isTemplate);
+    return ctx.helper.success({ res: url });
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: '/publishWork/:id',
+  })
+  @checkPremission('Work', 'pressisonUpdateWorkFail')
+  async publicWork(@Context() ctx:EggContext) {
+    const res = await this.public(ctx, false);
+    return res;
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: '/publishTemplate/:id',
+  })
+  @checkPremission('Work', 'pressisonUpdateWorkFail')
+  async publicTemplate(@Context() ctx:EggContext) {
+    const res = await this.public(ctx, true);
+    return res;
   }
 
 }
