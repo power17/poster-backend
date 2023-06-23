@@ -1,14 +1,1 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="{{desc}}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/minireset.css/0.0.2/minireset.min.css">
-</head>
-<body style="{{formatStyle}}">
-    {{html | safe }}
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="{{desc}}"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{title}}</title><link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/minireset.css/0.0.2/minireset.min.css"><script defer="defer" src="http://poster-design.oss-cn-shenzhen.aliyuncs.com/h5-assets/bundle.198764f94f488442a6b1.js"></script><link href="http://poster-design.oss-cn-shenzhen.aliyuncs.com/h5-assets/main.198764f94f488442a6b1.css" rel="stylesheet"></head><body style="{{formatStyle}}">{{html | safe }}</body></html>
