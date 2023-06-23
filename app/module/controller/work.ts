@@ -4,6 +4,7 @@ import { WorkProps } from '../../model/work';
 import { Application, IHelper } from 'typings/app';
 import validate from 'app/decorator/validate';
 import checkPremission from 'app/decorator/checkPremission';
+import { nanoid } from 'nanoid';
 const workRule = {
   title: 'string',
 };
@@ -21,12 +22,13 @@ const ListQueryTypeRules = {
   // isTemplate: 'string',
   // title: 'string',
 };
-// interface ListQueryType {
-//   pageIndex: string,
-//   pageSize: string,
-//   isTemplate?: string,
-//   title?:string
-// }
+const channelCreateRules = {
+  name: 'string',
+  workId: 'number',
+};
+const channelUpdateRules = {
+  name: 'string',
+};
 @HTTPController({
   path: '/api/work',
 })
@@ -37,6 +39,47 @@ export class workController {
   public validator: Application['validator'];
   @Inject()
   public helper:IHelper;
+  @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: '/createChannels',
+  })
+  @validate(channelCreateRules, 'inputVaildateFailInfo')
+  async createChannel(@Context() ctx:EggContext) {
+    const { workId, name } = ctx.request.body;
+    const newChannel = {
+      name,
+      id: nanoid(6),
+    };
+    const certainWork = await ctx.model.Work.findOneAndUpdate({ id: workId }, { $push: { channels: newChannel } });
+    if (certainWork) {
+      return ctx.helper.success({ res: newChannel });
+    }
+    return ctx.helper.error({ errorType: 'operateFailInfo' });
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.GET,
+    path: '/getWorkchannels/:id',
+  })
+  async getChannel(@Context() ctx: EggContext) {
+    const { id } = ctx.params;
+    const { channels } = await ctx.model.Work.findOne({ id }) || {};
+    return ctx.helper.success({ res: { count: channels, list: channels } });
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: '/updateWorkchannel/:id',
+  })
+
+  @validate(channelUpdateRules, 'inputVaildateFailInfo')
+  async updateChannel(@Context() ctx: EggContext) {
+    const { id } = ctx.params;
+    const { name } = ctx.request.body;
+    const res = await ctx.model.Work.findOneAndUpdate({ 'channels.id': id }, { 'channels.$.name': name }, { new: true }) || {};
+    if (!res) {
+      return ctx.helper.error({ errorType: 'operateFailInfo' });
+    }
+    return ctx.helper.success({ res });
+  }
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
     path: '/createWork',

@@ -86,6 +86,10 @@ const globalErrorMessage = {
     errno: 101000,
     msg: '客户端输入参数有误',
   },
+  operateFailInfo: {
+    errno: 101000,
+    msg: '操作失败',
+  },
   ...httpErrorMessage,
   ...userErrorMessage,
   ...utilErrorMessage,
