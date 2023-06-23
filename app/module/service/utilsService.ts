@@ -15,14 +15,39 @@ export class UtilsService {
       const formatKey = key.replace(/[A-Z]/, c => {
         return `-${c.toLowerCase()}`;
       });
+
+
       return `${formatKey}: ${style[key]}`;
     });
     return styleArr.join(';');
 
   }
+  // 转化为vw
+  pxTovw(components = []) {
+    const reg = /^(\d+(\.\d+)?)px$/;
+    components.forEach((component: any = {}) => {
+      const props = component.props;
+      Object.keys(props).forEach(key => {
+        const value = props[key];
+        if (typeof value !== 'string') {
+          return;
+        }
+        if (!reg.test(value)) {
+          return;
+        }
+        const matchValue = value.match(reg) || [];
+        const num = parseFloat(matchValue[1]);
+        const vwNum = (num / 375) * 100;
+        if (num) {
+          props[key] = `${vwNum.toFixed(2)}vw`;
+        }
+
+      });
+    });
+  }
+
   // SSR选择成html字符串
   async renderToPageData(query: {id: string, uuid: string}) {
-    console.log(query, 'query');
     const find = {
       id: Number(query.id),
       uuid: query.uuid,
@@ -32,6 +57,7 @@ export class UtilsService {
       throw new Error('work is not exit');
     }
     const { title, desc, content } = work;
+    this.pxTovw(content && content.components);
     const vueApp = createSSRApp({
       data() {
         return {
@@ -47,7 +73,6 @@ export class UtilsService {
     const formatStyle = this.parseToStyle(content?.props);
     // 转换为字符串
     const html = await renderToString(vueApp);
-    console.log(html);
     return { title, html, desc, formatStyle };
   }
 
