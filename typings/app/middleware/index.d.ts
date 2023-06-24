@@ -4,13 +4,13 @@
 
 import 'egg';
 import ExportCustomError from '../../../app/middleware/customError';
-import ExportDsads from '../../../app/middleware/dsads';
+import ExportDelete from '../../../app/middleware/delete';
 import ExportMyLogger from '../../../app/middleware/myLogger';
 
 declare module 'egg' {
   interface IMiddleware {
     customError: typeof ExportCustomError;
-    dsads: typeof ExportDsads;
+    delete: typeof ExportDelete;
     myLogger: typeof ExportMyLogger;
   }
 }

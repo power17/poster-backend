@@ -15,7 +15,7 @@
     "cov": "egg-bin cov -p",
     "ci": "npm run lint && npm run cov && npm run tsc && npm run clean",
     "lint": "eslint . --ext .ts --cache",
-    "tsc": "tsc",
+    "tsc": "ets && tsc -p tsconfig.json",
     "ets": "ets",
     "clean": "tsc -b --clean",
     "build:template:env": "npx webpack --config webpack/webpack.config.js",

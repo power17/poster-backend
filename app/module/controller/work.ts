@@ -41,9 +41,10 @@ export class workController {
   public helper:IHelper;
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
-    path: '/createChannels',
+    path: '/createChannel',
   })
   @validate(channelCreateRules, 'inputVaildateFailInfo')
+  @checkPremission({ casl: 'Channel', mongoose: 'Work' }, 'permissionWorkFail', { value: { type: 'body', valueKey: 'workId' } })
   async createChannel(@Context() ctx:EggContext) {
     const { workId, name } = ctx.request.body;
     const newChannel = {
@@ -60,6 +61,7 @@ export class workController {
     method: HTTPMethodEnum.GET,
     path: '/getWorkchannels/:id',
   })
+  @checkPremission({ casl: 'Channel', mongoose: 'Work' }, 'permissionWorkFail')
   async getChannel(@Context() ctx: EggContext) {
     const { id } = ctx.params;
     const { channels } = await ctx.model.Work.findOne({ id }) || {};
@@ -72,8 +74,8 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/updateWorkchannel/:id',
   })
-
   @validate(channelUpdateRules, 'inputVaildateFailInfo')
+  @checkPremission({ casl: 'Channel', mongoose: 'Work' }, 'permissionWorkFail', { key: 'channels.id' })
   async updateChannel(@Context() ctx: EggContext) {
     const { id } = ctx.params;
     const { name } = ctx.request.body;
@@ -87,6 +89,7 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/deleteWorkchannel/:id',
   })
+  @checkPremission({ casl: 'Channel', mongoose: 'Work' }, 'permissionWorkFail', { key: 'channels.id' })
   async deleteWorkChannels(@Context() ctx: EggContext) {
     const { id } = ctx.params;
     const work = await ctx.model.Work.findOneAndUpdate({ 'channels.id': id }, { $pull: { channels: { id } } }, { new: true });
@@ -100,7 +103,7 @@ export class workController {
     path: '/createWork',
   })
   @validate(workRule, 'inputVaildateFailInfo')
-  @checkPremission('Work', 'pressisonUpdateWorkFail')
+  @checkPremission('Work', 'permissionWorkFail')
   async createWork(@Context() ctx:EggContext, @HTTPBody() req: WorkProps) {
     // ctx.app.validator.validate(workRule, req);
     const workData = await this.workService.createWork(req);
@@ -111,7 +114,7 @@ export class workController {
     path: '/queryList',
   })
   @validate(ListQueryTypeRules, 'inputVaildateFailInfo')
-  @checkPremission('Work', 'pressisonUpdateWorkFail')
+  @checkPremission('Work', 'permissionWorkFail')
   async queryList(@Context() ctx:EggContext) {
     const { pageIndex, pageSize, isTemplate, title } = ctx.query;
     const userId = ctx.state.user._id;
@@ -135,7 +138,7 @@ export class workController {
     method: HTTPMethodEnum.GET,
     path: '/getWork/:id',
   })
-  @checkPremission('Work', 'pressisonUpdateWorkFail')
+  @checkPremission('Work', 'permissionWorkFail')
   async getWork(@Context() ctx: EggContext) {
     const { id } = ctx.params;
     const work = await ctx.model.Work.findOne({ id });
@@ -154,13 +157,13 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/deleteWork/:id',
   })
-  @checkPremission('Work', 'pressisonUpdateWorkFail')
+  @checkPremission('Work', 'permissionWorkFail')
   async deleteWork(@Context() ctx:EggContext, @HTTPParam() id: number) {
     const res = await ctx.model.Work.findOneAndDelete({ id: Number(id) }).select('id _id title').lean();
     return ctx.helper.success({ res });
   }
 
-  @checkPremission('Work', 'pressisonUpdateWorkFail', { action: 'publish' })
+  @checkPremission('Work', 'permissionWorkFail', { action: 'publish' })
   async public(ctx:EggContext, isTemplate: boolean) {
     const url = await this.workService.public(Number(ctx.params.id), isTemplate);
     return ctx.helper.success({ res: url });

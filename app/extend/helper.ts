@@ -68,7 +68,7 @@ const utilErrorMessage = {
 
 };
 const workErrorMessage = {
-  pressisonUpdateWorkFail: {
+  permissionWorkFail: {
     errno: 103012,
     msg: '权限不足，操作失败',
   },
