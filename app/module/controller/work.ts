@@ -63,7 +63,10 @@ export class workController {
   async getChannel(@Context() ctx: EggContext) {
     const { id } = ctx.params;
     const { channels } = await ctx.model.Work.findOne({ id }) || {};
-    return ctx.helper.success({ res: { count: channels, list: channels } });
+    if (!channels) {
+      return ctx.helper.error({ errorType: 'operateFailInfo' });
+    }
+    return ctx.helper.success({ res: { count: channels.length, list: channels } });
   }
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
@@ -79,6 +82,18 @@ export class workController {
       return ctx.helper.error({ errorType: 'operateFailInfo' });
     }
     return ctx.helper.success({ res });
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.POST,
+    path: '/deleteWorkchannel/:id',
+  })
+  async deleteWorkChannels(@Context() ctx: EggContext) {
+    const { id } = ctx.params;
+    const work = await ctx.model.Work.findOneAndUpdate({ 'channels.id': id }, { $pull: { channels: { id } } }, { new: true });
+    if (!work) {
+      return ctx.helper.error({ errorType: 'operateFailInfo' });
+    }
+    return ctx.helper.success({ res: work });
   }
   @HTTPMethod({
     method: HTTPMethodEnum.POST,

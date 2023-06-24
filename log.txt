@@ -189,4 +189,20 @@ Wed Jun 21 2023 23:18:54 GMT+0800 (中国标准时间) -- POST --/api/work/creat
   Sat Jun 24 2023 01:50:52 GMT+0800 (中国标准时间) -- POST --/api/work/updateWorkchannel/ePYISl -- 6ms
   Sat Jun 24 2023 01:51:09 GMT+0800 (中国标准时间) -- POST --/api/work/updateWorkchannel/ePYISl -- 16ms
   Sat Jun 24 2023 01:52:12 GMT+0800 (中国标准时间) -- POST --/api/work/updateWorkchannel/ePYISl -- 2ms
+  Sat Jun 24 2023 09:02:08 GMT+0800 (中国标准时间) -- POST --/api/users/genVeriCode -- 4ms
+  Sat Jun 24 2023 09:02:17 GMT+0800 (中国标准时间) -- POST --/api/users/loginByPhone -- 22ms
+  Sat Jun 24 2023 09:02:29 GMT+0800 (中国标准时间) -- POST --/api/work/updateWorkchannel/ePYISl -- 1ms
+  Sat Jun 24 2023 09:02:38 GMT+0800 (中国标准时间) -- POST --/api/work/updateWorkchannel/ePYISl -- 14ms
+  Sat Jun 24 2023 09:03:31 GMT+0800 (中国标准时间) -- GET --/api/work/deleteWorkchannel/ePYISl?=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjEzNzUxNzM4ODI3IiwiX2lkIjoiNjQ4ZWM3NTU1ODU3NmUzZGQwNzhkMjExIiwiaWF0IjoxNjg3NTY4NTM3LCJleHAiOjE2ODc1NzIxMzd9.gxXLBqMq1iDkNAYT4Chc6QMIrgoj_R5jT6QseQkCovI -- 0ms
+  Sat Jun 24 2023 09:04:15 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWorkchannel/ePYISl -- 22ms
+  Sat Jun 24 2023 09:04:32 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWorkchannel/ePYISl -- 6ms
+  Sat Jun 24 2023 09:04:34 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWorkchannel/ePYISl -- 5ms
+  Sat Jun 24 2023 09:05:29 GMT+0800 (中国标准时间) -- POST --/api/work/updateWorkchannel/ePYISl -- 7ms
+  Sat Jun 24 2023 09:05:44 GMT+0800 (中国标准时间) -- GET --/api/work/getWorkchannels/74 -- 14ms
+  Sat Jun 24 2023 09:06:24 GMT+0800 (中国标准时间) -- GET --/api/work/getWorkchannels/74 -- 8ms
+  Sat Jun 24 2023 09:06:26 GMT+0800 (中国标准时间) -- GET --/api/work/getWorkchannels/74 -- 15ms
+  Sat Jun 24 2023 09:06:39 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWorkchannel/rg0MPQ -- 19ms
+  Sat Jun 24 2023 09:06:44 GMT+0800 (中国标准时间) -- GET --/api/work/getWorkchannels/74 -- 8ms
+  Sat Jun 24 2023 09:09:48 GMT+0800 (中国标准时间) -- POST --/api/work/deleteWorkchannel/ZlVn9K -- 17ms
+  Sat Jun 24 2023 09:09:51 GMT+0800 (中国标准时间) -- GET --/api/work/getWorkchannels/74 -- 8ms
   
