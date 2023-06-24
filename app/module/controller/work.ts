@@ -100,6 +100,7 @@ export class workController {
     path: '/createWork',
   })
   @validate(workRule, 'inputVaildateFailInfo')
+  @checkPremission('Work', 'pressisonUpdateWorkFail')
   async createWork(@Context() ctx:EggContext, @HTTPBody() req: WorkProps) {
     // ctx.app.validator.validate(workRule, req);
     const workData = await this.workService.createWork(req);
@@ -110,6 +111,7 @@ export class workController {
     path: '/queryList',
   })
   @validate(ListQueryTypeRules, 'inputVaildateFailInfo')
+  @checkPremission('Work', 'pressisonUpdateWorkFail')
   async queryList(@Context() ctx:EggContext) {
     const { pageIndex, pageSize, isTemplate, title } = ctx.query;
     const userId = ctx.state.user._id;
@@ -130,10 +132,19 @@ export class workController {
     return ctx.helper.success({ res });
   }
   @HTTPMethod({
+    method: HTTPMethodEnum.GET,
+    path: '/getWork/:id',
+  })
+  @checkPremission('Work', 'pressisonUpdateWorkFail')
+  async getWork(@Context() ctx: EggContext) {
+    const { id } = ctx.params;
+    const work = await ctx.model.Work.findOne({ id });
+    return ctx.helper.success({ res: work });
+  }
+  @HTTPMethod({
     method: HTTPMethodEnum.POST,
     path: '/updateWork/:id',
   })
-  @checkPremission('Work', 'pressisonUpdateWorkFail')
   async updateWork(@Context() ctx:EggContext, @HTTPParam() id: string, @HTTPBody() payload:Partial<WorkProps>) {
     const res = await ctx.model.Work.findOneAndUpdate({ id: Number(id) }, payload, { new: true }).lean();
     ctx.logger.info(res, 'res');
@@ -149,7 +160,7 @@ export class workController {
     return ctx.helper.success({ res });
   }
 
-
+  @checkPremission('Work', 'pressisonUpdateWorkFail', { action: 'publish' })
   async public(ctx:EggContext, isTemplate: boolean) {
     const url = await this.workService.public(Number(ctx.params.id), isTemplate);
     return ctx.helper.success({ res: url });
@@ -158,7 +169,6 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/publishWork/:id',
   })
-  @checkPremission('Work', 'pressisonUpdateWorkFail')
   async publicWork(@Context() ctx:EggContext) {
     const res = await this.public(ctx, false);
     return res;
@@ -167,7 +177,7 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/publishTemplate/:id',
   })
-  @checkPremission('Work', 'pressisonUpdateWorkFail')
+
   async publicTemplate(@Context() ctx:EggContext) {
     const res = await this.public(ctx, true);
     return res;

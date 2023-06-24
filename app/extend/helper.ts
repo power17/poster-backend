@@ -70,7 +70,7 @@ const utilErrorMessage = {
 const workErrorMessage = {
   pressisonUpdateWorkFail: {
     errno: 103012,
-    msg: '权限不足，无法更改别人作品',
+    msg: '权限不足，操作失败',
   },
 };
 interface RespType {

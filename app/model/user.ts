@@ -12,7 +12,7 @@ export interface UserModelType {
   nickname?: string;
   picture?: string;
   phoneNumber?: string;
-
+  role?: 'admin' | 'normal';
   createAt:Date;
   updateAt: Date;
 
@@ -29,6 +29,7 @@ function initUserModel(app:Application) {
     phoneNumber: { type: String },
     provider: { type: String },
     oauthId: { type: String },
+    role: { type: String },
   }, {
     timestamps: { currentTime: () => new Date(), createdAt: 'createdAt', updatedAt: 'updatedAt' },
     toJSON: {
