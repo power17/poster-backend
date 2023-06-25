@@ -24,7 +24,8 @@ declare module 'egg' {
         }
         oss: {
             client?: Options
-        }
+        },
+        jwtExpires: string
     }
 
 }

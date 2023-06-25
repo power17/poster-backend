@@ -30,10 +30,10 @@ export default (appInfo: EggAppInfo) => {
       '.nj': 'nunjucks',
     },
   };
-  config.cors = {
-    origin: 'http://localhost:5173',
-    allowMethods: 'GET,POST,PUT,DELETE',
-  };
+  // config.cors = {
+  //   origin: 'http://localhost:5173',
+  //   allowMethods: 'GET,POST,PUT,DELETE',
+  // };
   // 上传文件
   config.multipart = {
     // mode: 'stream',
@@ -70,15 +70,17 @@ export default (appInfo: EggAppInfo) => {
   const bizConfig = {
     h5baseUrl: 'http://localhost:7001/api/utils/pages',
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
-    mongoose: { client: {
-      url: 'mongodb://localhost:27017/poster',
-      options: { useUnifiedTopology: true },
-    } },
+    mongoose: {
+      client: {
+        url: 'mongodb://localhost:27017/poster',
+        options: { useUnifiedTopology: true },
+      } },
     // mongoose: {
     //   url: 'mongodb://localhost:27017/poster',
     // },
     security: {
       csrf: { enable: false },
+      domainWitheList: [ 'http://localhost:5173' ],
     },
     aliCloudConfig: {
       accessKeyId: process.env.ALC_ACCESS_KEY,
@@ -92,6 +94,7 @@ export default (appInfo: EggAppInfo) => {
       redirectURL: 'http://127.0.0.1:7001/api/users/gitee/callback',
       authUrl: 'https://gitee.com/oauth/token',
       giteeUserInfo: 'https://gitee.com/api/v5/user',
+      jwtExpires: '3h',
     },
 
   };

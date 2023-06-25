@@ -1,5 +1,5 @@
 import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, EggQualifier, EggType, HTTPBody, Context, EggContext } from '@eggjs/tegg';
-import { UserService } from '@/module/service';
+import { UserService } from '../service/userService';
 import { IHelper, EggAppConfig } from 'egg';
 import { UserModelType } from 'app/model/user';
 // import * as jsonwebtoken from 'jsonwebtoken';
@@ -121,7 +121,7 @@ export class UserController {
     // Register claims 注册相关信息
     // public claims 公共信息 should be unique like email, address or phone_number
     // genarate token sign
-    const token = this.jwt.sign({ username: user.username, _id: user._id }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
+    const token = this.jwt.sign({ username: user.username, _id: user._id }, ctx.app.config.jwt.secret, { expiresIn: this.config.jwtExpires });
     // ctx.cookies.set('username', user.username, { encrypt: true });
     // ctx.session.username = user.username;
     return ctx.helper.success({ res: { token }, msg: '登录成功' });
