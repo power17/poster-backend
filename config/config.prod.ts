@@ -12,6 +12,12 @@ export default () => {
     redirectURL: 'http://120.78.65.45/api/users/gitee/callback',
   };
   config.h5baseUrl = 'http://120.78.65.45/api/utils/pages';
+  config.mongoose = {
+    client: {
+      url: 'mongodb://mongo:27017/poster',
+      options: { useUnifiedTopology: true },
+    },
+  };
   // config.mongoose = {
   //   client: {
   //     url: 'XXXX',

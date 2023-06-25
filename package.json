@@ -7,7 +7,7 @@
     "typescript": true
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-poster-backend",
+    "start": "egg-scripts start --daemon --port 7001 --title=egg-server-poster-backend",
     "stop": "egg-scripts stop --title=egg-server-poster-backend",
     "dev": "egg-bin dev",
     "test-local": "egg-bin test -p",

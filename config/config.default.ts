@@ -16,14 +16,14 @@ export default (appInfo: EggAppInfo) => {
   config.bcrypt = {
     saltRounds: 10,
   };
-  config.redis = {
-    client: {
-      port: 6379,
-      host: '127.0.0.1',
-      password: '',
-      db: 0,
-    },
-  };
+  // config.redis = {
+  //   client: {
+  //     port: 6379,
+  //     host: '127.0.0.1',
+  //     password: '',
+  //     db: 0,
+  //   },
+  // };
   config.view = {
     defaultViewEngine: 'nunjucks',
     mapping: {
@@ -72,12 +72,10 @@ export default (appInfo: EggAppInfo) => {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     mongoose: {
       client: {
-        url: 'mongodb://localhost:27017/poster',
+        url: 'mongodb://127.0.0.1:27017/poster',
         options: { useUnifiedTopology: true },
-      } },
-    // mongoose: {
-    //   url: 'mongodb://localhost:27017/poster',
-    // },
+      },
+    },
     security: {
       csrf: { enable: false },
       domainWitheList: [ 'http://localhost:5173' ],
