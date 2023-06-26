@@ -31,3 +31,11 @@ $ npm start
 
 - Node.js >= 16.x
 - Typescript >= 4.x
+
+## 启动docker
+```bash
+# 开启docker
+$ docker-compose up -d
+# 关闭docker
+$ docker-compose down
+```

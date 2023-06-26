@@ -71,9 +71,14 @@ export default (appInfo: EggAppInfo) => {
     h5baseUrl: 'http://localhost:7001/api/utils/pages',
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     mongoose: {
+      // url: 'mongodb://127.0.0.1:27017/poster',
+      // options: {},
       client: {
         url: 'mongodb://127.0.0.1:27017/poster',
-        options: { useUnifiedTopology: true },
+        options: {
+          user: '',
+          pass: '',
+        },
       },
     },
     security: {
