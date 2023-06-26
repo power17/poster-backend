@@ -38,4 +38,6 @@ $ npm start
 $ docker-compose up -d
 # 关闭docker
 $ docker-compose down
+# 一键清理 Build Cache 缓存命令： 
+docker builder prune
 ```
