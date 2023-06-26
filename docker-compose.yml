@@ -9,7 +9,18 @@ services:
     env_file:
       - .env  
     ports:
-      - 27017:27017  
+      - 27017:27017
+  poster-redis:
+    image: redis:7
+    command: >
+      --requirepass ${REDIS_PASSWORD}
+    container_name: poster-redis
+    env_file:
+      - .env 
+    ports:
+      - 6379:6379
+      
+
   poster-backend:
     depends_on:
       - poster-mongo
