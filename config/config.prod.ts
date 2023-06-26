@@ -18,8 +18,7 @@ export default () => {
   //     options: { useUnifiedTopology: true },
   //   },
   // };
-  console.log(111);
-  console.log(process.env.MONGO_DB_USERNAME, process.env.MONGO_DB_PASSWORD, '251432423432432');
+
   config.mongoose = {
     // url: 'mongodb://127.0.0.1:27017/poster',
     // options: {

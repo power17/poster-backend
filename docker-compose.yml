@@ -19,16 +19,15 @@ services:
       - .env 
     ports:
       - 6379:6379
-      
-
   poster-backend:
     depends_on:
       - poster-mongo
+      - poster-redis
+    image: poster-backend  
+    container_name: poster-backend
     build: 
       context: .  #当前目录
       dockerfile: Dockerfile #基于Dockerfile构建
-    image: poster-backend
-    container_name: poster-backend
     ports:
       - 7001:7001
     env_file:
