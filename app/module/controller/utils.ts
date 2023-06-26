@@ -2,7 +2,7 @@ import { Context, HTTPController, EggContext, HTTPMethodEnum, HTTPMethod, Inject
 import { EggAppConfig, EggLogger, FileStream } from 'typings/app';
 // import sharp from 'sharp';
 import { nanoid } from 'nanoid';
-// import { extname, join, parse } from 'path';
+import { join, parse } from 'path';
 // import { createWriteStream } from 'fs';
 // import { pipeline } from 'stream/promises';
 import sendToWormhole from 'stream-wormhole';
