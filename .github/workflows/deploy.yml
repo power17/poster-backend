@@ -31,7 +31,7 @@ jobs:
             ls -a poster-backend
           # 通过scp拷贝到服务器
         - name: 'scp poster-backend to server'   
-        uses: appleboy/scp-action@v0.1.4
+          uses: appleboy/scp-action@v0.1.4
           with:
             host: ${{ secrets.HOST }}
             username: ${{ secrets.SERVER_USERNAME }}
