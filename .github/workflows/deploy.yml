@@ -1,0 +1,42 @@
+# 发布代码到服务器
+name: Deploy App To Server
+on: [push]
+jobs:
+    build-and-push:
+      runs-on: ubuntu-latest
+      steps:
+        # checkout代码
+        - uses: actions/checkout@v2
+        # 创建.env文件
+        - name: 'create env file'
+          run: |
+            touch .env
+            echo ALC_ACCESS_KEY=${{ secrets.ALC_ACCESS_KEY}} >> .env
+            echo ALC_SECRET_KEY=${{ secrets.ALC_SECRET_KEY}} >> .env
+            echo GITEE_CID=${{ secrets.GITEE_CID}} >> .env
+            echo GITEE_SECRET=${{ secrets.GITEE_SECRET}} >> .env
+            echo JWT_SECRET=${{ secrets.JWT_SECRET}} >> .env
+            echo MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME}} >> .env
+            echo MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD}} >> .env
+            echo MONGO_DB_USERNAME=${{ secrets.MONGO_DB_USERNAME}} >> .env
+            echo MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD}} >> .env
+            echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD}} >> .env
+            echo PING_ENV=${{ secrets.PING_ENV}} >> .env
+          # 拷贝必须文件到文件夹，包括 .env mongo-entrypoint compose-online.yml
+        - name: 'copy neccessary files to one file'
+          run: |
+            mkdir poster-backend
+            cp .env docker-compose-online.yml poster-backend
+            cp -r mongo-entrypoint poster-backend
+            ls -a poster-backend
+          # 通过scp拷贝到服务器
+        - name: 'scp poster-backend to server'   
+        uses: appleboy/scp-action@v0.1.4
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.SERVER_USERNAME }}
+            key: ${{ secrets.SERVER_PRIVATE_KEY }}
+            port: 22
+            source: 'poster-backend'
+            # home folder
+            target: '~' 

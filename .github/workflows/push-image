@@ -1,4 +1,5 @@
-name: Deploy
+# 发布第一步构建镜像，推送阿里云
+name: Push Image to ali
 on: [push]
 jobs:
     build-and-push:
