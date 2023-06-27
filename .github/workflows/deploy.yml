@@ -50,7 +50,7 @@ jobs:
             port: 22
             script_stop: true   
             script: |
-              docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} 
+              docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
               cd ~/poster-backend
               docker-compose -f docker-compose-online.yml down
               docker-compose -f docker-compose-online.yml up -d 
