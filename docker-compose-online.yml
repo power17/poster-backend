@@ -1,0 +1,31 @@
+version: '3'
+services:
+  poster-mongo:
+    image: mongo
+    container_name: poster-mongo
+    volumes:
+      - '.docker-volumes/mongo/data:/data/db'
+      - '$PWD/mongo-entrypoint/:/docker-entrypoint-initdb.d/'
+    env_file:
+      - .env  
+    ports:
+      - 27018:27017
+  poster-redis:
+    image: redis:7
+    command: >
+      --requirepass ${REDIS_PASSWORD}
+    container_name: poster-redis
+    env_file:
+      - .env 
+    ports:
+      - 6378:6379
+  poster-backend:
+    depends_on:
+      - poster-mongo
+      - poster-redis
+    image: registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.1
+    container_name: poster-backend
+    ports:
+      - 7002:7001
+    env_file:
+      - .env   

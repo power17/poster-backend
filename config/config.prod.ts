@@ -30,6 +30,7 @@ export default () => {
       options: {
         user: process.env.MONGO_DB_USERNAME,
         pass: process.env.MONGO_DB_PASSWORD,
+        useUnifiedTopology: true,
       },
     },
   };

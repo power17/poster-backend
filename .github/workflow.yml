@@ -1,0 +1,33 @@
+name: Deploy
+on: [push]
+  jobs:
+    build-and-push:
+      runs-on: ubuntu-latest
+      steps:
+        # checkout代码
+        - uses: actions/checkout@v2
+        # 创建env文件
+        - run: touch .en
+        - run: echo ALC_ACCESS_KEY=${{ secrets.ALC_ACCESS_KEY}} >> .env
+        - run: echo ALC_SECRET_KEY=${{ secrets.ALC_SECRET_KEY}} >> .env
+        # 登录到阿里云acr
+        - name: Login to ali Container Register
+          uses: aliyun/acr-login@v1
+          with:
+            login-server: registry.cn-hangzhou.aliyuncs.com
+            region-id: cn-hangzhou
+            username: "${{ secrets.REGISTRY_USERNAME }}"
+            password: "${{ secrets.REGISTRY_PASSWORD }}"
+        # 使用正确的阿里云 tag进行dockerbuild
+        - name: Build image for Docker
+          run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2" .
+          run: docker push registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2    
+        
+        # - uses: appleboy/ssh-action@master
+        #   with: 
+        #     host: {{ secrets.HOST }}
+        #     username: {{ secrets.SSH_USER}}
+        #     password: {{ secrets.SSH_PWD }}
+        #     script_stop: true
+
+
