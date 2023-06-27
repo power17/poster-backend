@@ -24,12 +24,6 @@ jobs:
           run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2" .
         - name: push Image to ACR  
           run: docker push registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2    
-        
-        # - uses: appleboy/ssh-action@master
-        #   with: 
-        #     host: {{ secrets.HOST }}
-        #     username: {{ secrets.SSH_USER}}
-        #     password: {{ secrets.SSH_PWD }}
-        #     script_stop: true
+       
 
 
