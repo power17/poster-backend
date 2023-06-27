@@ -23,7 +23,7 @@ services:
     depends_on:
       - poster-mongo
       - poster-redis
-    image: registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2
+    image: registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:{{tag}}
     container_name: poster-backend
     ports:
       - 7002:7001

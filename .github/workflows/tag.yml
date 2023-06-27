@@ -1,0 +1,27 @@
+name: Tag
+on:
+  push:
+    tags: 
+      - 'v*.*.*'
+jobs: 
+  test-tag:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout代码
+      - uses: actions/checkout@v2    
+      # 测试 git context
+      - name: 'test github context'
+        run: 
+          echo ${{ github.ref }}
+          echo ${{ github.ref_name }}
+          echo ${{ github.sha }}
+      #测试查找替换
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: '{{tag}}'
+          replace: ${{ github.ref_name }}
+          include: 'docker-compose-online.yml'
+          regex: false
+      - run: cat docker-compose-online.yml  
+    
