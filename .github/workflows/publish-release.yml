@@ -11,8 +11,8 @@ jobs:
     # checkout代码
       - uses: actions/checkout@v2 
     # 创建.env文件
-        - name: 'create env file'
-          run: |
+      - name: 'create env file'
+        run: |
             touch .env
             echo ALC_ACCESS_KEY=${{ secrets.ALC_ACCESS_KEY}} >> .env
             echo ALC_SECRET_KEY=${{ secrets.ALC_SECRET_KEY}} >> .env
@@ -25,59 +25,59 @@ jobs:
             echo MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD}} >> .env
             echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD}} >> .env
             echo PING_ENV=${{ secrets.PING_ENV}} >> .env  
-        # 登录到阿里云acr
-        - name: Login to ali Container Register
-          uses: aliyun/acr-login@v1
-          with:
-            login-server: registry.cn-hangzhou.aliyuncs.com
-            region-id: cn-hangzhou
-            username: "${{ secrets.ACR_USERNAME }}"
-            password: "${{ secrets.ACR_PASSWORD }}"
-        - name: Build image for Docker
-          run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:${{ github.ref_name }}" .
-        - name: push Image to ACR  
-          run: docker push registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:${{ github.ref_name }}    
+      # 登录到阿里云acr
+      - name: Login to ali Container Register
+        uses: aliyun/acr-login@v1
+        with:
+          login-server: registry.cn-hangzhou.aliyuncs.com
+          region-id: cn-hangzhou
+          username: "${{ secrets.ACR_USERNAME }}"
+          password: "${{ secrets.ACR_PASSWORD }}"
+      - name: Build image for Docker
+        run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:${{ github.ref_name }}" .
+      - name: push Image to ACR  
+        run: docker push registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:${{ github.ref_name }}    
         # 查找docker-compose-online并替换tag
-        - name: Find and Replace
-          uses: jacobtomlinson/gha-find-replace@v3
-          with:
-            find: '{{tag}}'
-            replace: ${{ github.ref_name }}
-            include: 'docker-compose-online.yml'
-            regex: false
-        - run: cat docker-compose-online.yml 
-        # 拷贝必须文件到文件夹，包括 .env mongo-entrypoint compose-online.yml
-        - name: 'copy neccessary files to one file'
-          run: |
-            mkdir poster-backend
-            cp .env docker-compose-online.yml poster-backend
-            cp -r mongo-entrypoint poster-backend
-            ls -a poster-backend 
-          # 通过scp拷贝到服务器
-        - name: 'scp poster-backend to server'   
-          uses: appleboy/scp-action@v0.1.4
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.SERVER_USERNAME }}
-            key: ${{ secrets.SERVER_PRIVATE_KEY }}
-            port: 22
-            source: 'poster-backend'
-            # home folder
-            target: '~' 
-        # 通过ssh登录并重启服务
-        - name: 'ssh login and start service'
-          uses: appleboy/ssh-action@master
-          with: 
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.SERVER_USERNAME }}
-            key: ${{ secrets.SERVER_PRIVATE_KEY }}
-            port: 22
-            script_stop: true   
-            script: |
-              docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
-              cd ~/poster-backend
-              docker-compose -f docker-compose-online.yml down
-              docker-compose -f docker-compose-online.yml up -d 
-              rm -rf .env
-              docker logout registry.cn-hangzhou.aliyuncs.com    
-    
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: '{{tag}}'
+          replace: ${{ github.ref_name }}
+          include: 'docker-compose-online.yml'
+          regex: false
+      - run: cat docker-compose-online.yml 
+      # 拷贝必须文件到文件夹，包括 .env mongo-entrypoint compose-online.yml
+      - name: 'copy neccessary files to one file'
+        run: |
+          mkdir poster-backend
+          cp .env docker-compose-online.yml poster-backend
+          cp -r mongo-entrypoint poster-backend
+          ls -a poster-backend 
+       # 通过scp拷贝到服务器
+      - name: 'scp poster-backend to server'   
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          port: 22
+          source: 'poster-backend'
+          # home folder
+          target: '~' 
+      # 通过ssh登录并重启服务
+      - name: 'ssh login and start service'
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          port: 22
+          script_stop: true   
+          script: |
+            docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
+            cd ~/poster-backend
+            docker-compose -f docker-compose-online.yml down
+            docker-compose -f docker-compose-online.yml up -d 
+            rm -rf .env
+            docker logout registry.cn-hangzhou.aliyuncs.com    
+            
