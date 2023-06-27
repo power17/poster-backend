@@ -19,7 +19,7 @@ export class IndexController {
         redisStatus: status,
         ping: process.env.PING_ENV,
         AppVersion,
-        hello: 'sfdf',
+        hello: 'hello world',
       },
     });
   }
