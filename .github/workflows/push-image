@@ -19,7 +19,7 @@ jobs:
             region-id: cn-hangzhou
             username: "${{ secrets.REGISTRY_USERNAME }}"
             password: "${{ secrets.REGISTRY_PASSWORD }}"
-        # 使用正确的阿里云 tag进行dockerbuild
+        # 使用正确的阿里云 tag进行docker build
         - name: Build image for Docker
           run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2" .
         - name: push Image to ACR  
