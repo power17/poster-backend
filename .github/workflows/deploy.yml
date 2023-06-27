@@ -43,15 +43,15 @@ jobs:
         # 通过ssh登录并重启服务
         - name: 'ssh login and start service'
           uses: appleboy/ssh-action@master
-          with: 
-            host: {{ secrets.HOST }}
-            username: {{ secrets.SSH_USER}}
-            key: ${{ secrets.SERVER_PRIVATE_KEY }}
-            script_stop: true   
-            script: |
-              docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} 
-              cd ~/poster-backend
-              docker-compose -f docker-compose-online.yml down
-              docker-compose -f docker-compose-online.yml up -d 
-              rm -rf .env
-              docker logout registry.cn-hangzhou.aliyuncs.com
+            with: 
+              host: {{ secrets.HOST }}
+              username: {{ secrets.SSH_USER}}
+              key: ${{ secrets.SERVER_PRIVATE_KEY }}
+              script_stop: true   
+              script: |
+                docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} 
+                cd ~/poster-backend
+                docker-compose -f docker-compose-online.yml down
+                docker-compose -f docker-compose-online.yml up -d 
+                rm -rf .env
+                docker logout registry.cn-hangzhou.aliyuncs.com
