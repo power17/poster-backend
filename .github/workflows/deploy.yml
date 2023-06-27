@@ -41,7 +41,8 @@ jobs:
             # home folder
             target: '~' 
         # 通过ssh登录并重启服务
-        - uses: appleboy/ssh-action@master
+        - name: 'ssh login and start service'
+          uses: appleboy/ssh-action@master
           with: 
             host: {{ secrets.HOST }}
             username: {{ secrets.SSH_USER}}
