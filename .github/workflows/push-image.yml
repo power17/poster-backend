@@ -1,6 +1,6 @@
 name: Deploy
 on: [push]
-  jobs:
+jobs:
     build-and-push:
       runs-on: ubuntu-latest
       steps:
@@ -21,6 +21,7 @@ on: [push]
         # 使用正确的阿里云 tag进行dockerbuild
         - name: Build image for Docker
           run: docker build --tag "registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2" .
+        - name: push Image to ACR  
           run: docker push registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:0.0.2    
         
         # - uses: appleboy/ssh-action@master
