@@ -85,7 +85,6 @@ export default function checkPermission(modelName: string | ModelMapping, errorT
         ctx.body = ctx.helper.error({ errorType });
         return;
       }
-      console.log(permission, 'permission');
       // const userId = ctx.state.user._id;
       // const certainWork = await ctx.model[modelName].findOne({ id });
       // if (!certainWork || certainWork[userKey].toString() !== userId) {

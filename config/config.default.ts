@@ -16,14 +16,14 @@ export default (appInfo: EggAppInfo) => {
   config.bcrypt = {
     saltRounds: 10,
   };
-  // config.redis = {
-  //   client: {
-  //     port: 6379,
-  //     host: '127.0.0.1',
-  //     password: '',
-  //     db: 0,
-  //   },
-  // };
+  config.redis = {
+    client: {
+      port: 6379,
+      host: '127.0.0.1',
+      password: '',
+      db: 0,
+    },
+  };
   config.view = {
     defaultViewEngine: 'nunjucks',
     mapping: {
@@ -55,9 +55,7 @@ export default (appInfo: EggAppInfo) => {
       accessKeySecret: process.env.ALC_SECRET_KEY || '',
       bucket: 'poster-design',
       endpoint: 'oss-cn-shenzhen.aliyuncs.com',
-
     },
-
   };
   // jwt
   config.jwt = {
@@ -99,7 +97,6 @@ export default (appInfo: EggAppInfo) => {
       giteeUserInfo: 'https://gitee.com/api/v5/user',
       jwtExpires: '3h',
     },
-
   };
 
   // the return config will combines to EggAppConfig

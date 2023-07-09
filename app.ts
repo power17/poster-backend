@@ -24,13 +24,11 @@ export default class AppBoot implements IBoot {
   }
   async willReady(): Promise<void> {
     // let app: Application;
-    // console.log('willReady middleware', this.app.config.coreMiddleware);
     //  加载model      app/model/user.ts ==>app.model.User
     // const dir = join(this.app.config.baseDir, 'app/model');
     // this.app.loader.loadToApp(dir, 'model', {
     //   caseStyle: 'upper',
     // });
-    // console.log(this.app.model, 'this.app');
     // app.model = this.app.model;
 
   }

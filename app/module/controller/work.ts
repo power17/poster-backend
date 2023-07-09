@@ -12,7 +12,7 @@ export interface IndexCondition {
   pageIndex?: number;
   pageSize?: number;
   select?: string | string[];
-  populate?: { path?: string; select?: string; } | string;
+  populate?: { path?: string; select?: string } | string;
   customSort?: Record<string, any>;
   find?: Record<string, any>;
 }
@@ -38,14 +38,14 @@ export class workController {
   @Inject()
   public validator: Application['validator'];
   @Inject()
-  public helper:IHelper;
+  public helper: IHelper;
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
     path: '/createChannel',
   })
   @validate(channelCreateRules, 'inputVaildateFailInfo')
   @checkPremission({ casl: 'Channel', mongoose: 'Work' }, 'permissionWorkFail', { value: { type: 'body', valueKey: 'workId' } })
-  async createChannel(@Context() ctx:EggContext) {
+  async createChannel(@Context() ctx: EggContext) {
     const { workId, name } = ctx.request.body;
     const newChannel = {
       name,
@@ -64,7 +64,7 @@ export class workController {
   @checkPremission({ casl: 'Channel', mongoose: 'Work' }, 'permissionWorkFail')
   async getChannel(@Context() ctx: EggContext) {
     const { id } = ctx.params;
-    const { channels } = await ctx.model.Work.findOne({ id }) || {};
+    const { channels } = (await ctx.model.Work.findOne({ id })) || {};
     if (!channels) {
       return ctx.helper.error({ errorType: 'operateFailInfo' });
     }
@@ -79,7 +79,7 @@ export class workController {
   async updateChannel(@Context() ctx: EggContext) {
     const { id } = ctx.params;
     const { name } = ctx.request.body;
-    const res = await ctx.model.Work.findOneAndUpdate({ 'channels.id': id }, { 'channels.$.name': name }, { new: true }) || {};
+    const res = (await ctx.model.Work.findOneAndUpdate({ 'channels.id': id }, { 'channels.$.name': name }, { new: true })) || {};
     if (!res) {
       return ctx.helper.error({ errorType: 'operateFailInfo' });
     }
@@ -104,19 +104,20 @@ export class workController {
   })
   @validate(workRule, 'inputVaildateFailInfo')
   @checkPremission('Work', 'permissionWorkFail')
-  async createWork(@Context() ctx:EggContext, @HTTPBody() req: WorkProps) {
+  async createWork(@Context() ctx: EggContext, @HTTPBody() req: WorkProps) {
     // ctx.app.validator.validate(workRule, req);
     const workData = await this.workService.createWork(req);
     return ctx.helper.success({ res: workData });
   }
   @HTTPMethod({
     method: HTTPMethodEnum.GET,
-    path: '/queryList',
+    path: '/templates',
   })
   @validate(ListQueryTypeRules, 'inputVaildateFailInfo')
-  @checkPremission('Work', 'permissionWorkFail')
-  async queryList(@Context() ctx:EggContext) {
+  // @checkPremission('Work', 'permissionWorkFail')
+  async queryList(@Context() ctx: EggContext) {
     const { pageIndex, pageSize, isTemplate, title } = ctx.query;
+    console.log(ctx.state.user, 'fsfsdfd');
     const userId = ctx.state.user._id;
     const findConditon = {
       user: userId,
@@ -148,7 +149,7 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/updateWork/:id',
   })
-  async updateWork(@Context() ctx:EggContext, @HTTPParam() id: string, @HTTPBody() payload:Partial<WorkProps>) {
+  async updateWork(@Context() ctx: EggContext, @HTTPParam() id: string, @HTTPBody() payload: Partial<WorkProps>) {
     const res = await ctx.model.Work.findOneAndUpdate({ id: Number(id) }, payload, { new: true }).lean();
     ctx.logger.info(res, 'res');
     return ctx.helper.success({ res });
@@ -158,13 +159,15 @@ export class workController {
     path: '/deleteWork/:id',
   })
   @checkPremission('Work', 'permissionWorkFail')
-  async deleteWork(@Context() ctx:EggContext, @HTTPParam() id: number) {
-    const res = await ctx.model.Work.findOneAndDelete({ id: Number(id) }).select('id _id title').lean();
+  async deleteWork(@Context() ctx: EggContext, @HTTPParam() id: number) {
+    const res = await ctx.model.Work.findOneAndDelete({ id: Number(id) })
+      .select('id _id title')
+      .lean();
     return ctx.helper.success({ res });
   }
 
   @checkPremission('Work', 'permissionWorkFail', { action: 'publish' })
-  async public(ctx:EggContext, isTemplate: boolean) {
+  async public(ctx: EggContext, isTemplate: boolean) {
     const url = await this.workService.public(Number(ctx.params.id), isTemplate);
     return ctx.helper.success({ res: url });
   }
@@ -172,7 +175,7 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/publishWork/:id',
   })
-  async publicWork(@Context() ctx:EggContext) {
+  async publicWork(@Context() ctx: EggContext) {
     const res = await this.public(ctx, false);
     return res;
   }
@@ -180,10 +183,8 @@ export class workController {
     method: HTTPMethodEnum.POST,
     path: '/publishTemplate/:id',
   })
-
-  async publicTemplate(@Context() ctx:EggContext) {
+  async publicTemplate(@Context() ctx: EggContext) {
     const res = await this.public(ctx, true);
     return res;
   }
-
 }

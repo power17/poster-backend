@@ -41,3 +41,11 @@ $ docker-compose down
 # 一键清理 Build Cache 缓存命令： 
 docker builder prune
 ```
+## 启动mongodb(开发)
+```shell
+mongod --config /usr/local/etc/mongo.conf
+# 查看
+ps aux | grep mongod
+# 关闭
+kill -9 [id]
+```

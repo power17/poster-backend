@@ -130,7 +130,7 @@ export class UserController {
   }
   @HTTPMethod({
     method: HTTPMethodEnum.POST,
-    path: 'loginByPhone',
+    path: 'loginByPhoneNumber',
   })
   async loginByPhone(@HTTPBody() req:loginQueryParam, @Context() ctx: EggContext) {
     const { veriCode, phoneNumber } = req;
@@ -139,7 +139,7 @@ export class UserController {
       return this.helper.error({ errorType: 'veriCodeIncorrectFailInfo' });
     }
     const token = await this.userService.loginByPhone(phoneNumber);
-    return ctx.helper.success({ res: token });
+    return ctx.helper.success({ res: { token } });
 
   }
 
@@ -150,7 +150,6 @@ export class UserController {
   // @Middleware(jwt)
   async findById(@Context() ctx: EggContext) {
     // const { username } = ctx.session;
-    console.log(ctx.state.user);
     const userData = await this.userService.findByOneParam(ctx.state.user.username);
     return ctx.helper.success({ res: { userData } });
   }

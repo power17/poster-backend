@@ -8,7 +8,6 @@
 //   }
 //   if (typeof authorization === 'string') {
 //     const parts = authorization.trim().split(' ');
-//     console.log(parts);
 //     if (parts.length === 2) {
 //       if (/^bearer$/i.test(parts[0])) {
 //         return parts[1];
