@@ -137,7 +137,7 @@ export class workController {
   }
   @HTTPMethod({
     method: HTTPMethodEnum.GET,
-    path: '/getWork/:id',
+    path: '/:id',
   })
   @checkPremission('Work', 'permissionWorkFail')
   async getWork(@Context() ctx: EggContext) {

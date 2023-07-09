@@ -36,10 +36,10 @@ export default (appInfo: EggAppInfo) => {
   // };
   // 上传文件
   config.multipart = {
-    // mode: 'stream',
+    mode: 'stream',
     whitelist: [ '.jpeg', '.png', '.gif', '.webp', '.jpg' ],
     tmpdir: join(appInfo.baseDir, 'uploads'),
-    fileSize: '300kb',
+    fileSize: '20mb',
   };
   // 静态文件
   config.static = {
