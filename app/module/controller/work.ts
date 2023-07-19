@@ -50,6 +50,7 @@ export class workController {
     const newChannel = {
       name,
       id: nanoid(6),
+      workId,
     };
     const certainWork = await ctx.model.Work.findOneAndUpdate({ id: workId }, { $push: { channels: newChannel } });
     if (certainWork) {
@@ -59,7 +60,7 @@ export class workController {
   }
   @HTTPMethod({
     method: HTTPMethodEnum.GET,
-    path: '/getWorkchannels/:id',
+    path: '/getChannels/:id',
   })
   @checkPremission({ casl: 'Channel', mongoose: 'Work' }, 'permissionWorkFail')
   async getChannel(@Context() ctx: EggContext) {

@@ -31,7 +31,7 @@ export default (appInfo: EggAppInfo) => {
     },
   };
   // config.cors = {
-  //   origin: 'http://localhost:5173',
+  //   origin: 'http://localhost:8080',
   //   allowMethods: 'GET,POST,PUT,DELETE',
   // };
   // 上传文件
@@ -61,7 +61,7 @@ export default (appInfo: EggAppInfo) => {
   config.jwt = {
     enable: true,
     secret: process.env.JWT_SECRET || '',
-    match: [ '/api/users/getUserInfo', '/api/work' ],
+    match: [ '/api/users/getUserInfo', '/api/work/' ],
   };
 
   // add your special config in here

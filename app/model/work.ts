@@ -5,6 +5,7 @@ import { Schema } from 'mongoose';
 interface ChannelProps {
   name: string;
   id: string;
+  workId: string
 }
 export interface WorkProps {
   id?: number;
