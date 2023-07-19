@@ -20,10 +20,10 @@ const defaultIndexCondition: Required<IndexCondition> = {
 export class WorkService {
   @Inject()
   @EggQualifier(EggType.CONTEXT)
-  private model:MongooseModels;
+  private model: MongooseModels;
   @Inject()
   @EggQualifier(EggType.CONTEXT)
-  private state:EggContext['state'];
+  private state: EggContext['state'];
   @Inject()
   private config: EggAppConfig;
   async createWork(payload) {
@@ -36,7 +36,18 @@ export class WorkService {
       uuid,
     };
     return this.model.Work.create(newEmptyWork);
-
+  }
+  async getList(condition: IndexCondition) {
+    const fcondition = { ...defaultIndexCondition, ...condition };
+    const { pageIndex, pageSize, select, populate, customSort, find } = fcondition;
+    const skip = pageIndex * pageSize;
+    const res = await this.model.Work.find(find).select(select).populate(populate)
+      .skip(skip)
+      .limit(pageSize)
+      .sort(customSort)
+      .lean();
+    const count = await this.model.Work.find(find).count();
+    return { count, list: res, pageSize, pageIndex };
   }
   async queryList(condition: IndexCondition) {
     const fCondition = {
@@ -45,8 +56,7 @@ export class WorkService {
     };
     const { pageIndex, pageSize, select, populate, customSort, find } = fCondition;
     const skip = pageIndex * pageSize;
-    const list = await this.model.Work
-      .find(find).select(select).populate(populate)
+    const list = await this.model.Work.find(find).select(select).populate(populate)
       .skip(skip)
       .limit(pageSize)
       .sort(customSort)
@@ -67,5 +77,4 @@ export class WorkService {
     }
     return `${h5baseUrl}/p/${id}-${res.uuid}`;
   }
-
 }

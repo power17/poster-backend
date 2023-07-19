@@ -138,6 +138,23 @@ export class workController {
   }
   @HTTPMethod({
     method: HTTPMethodEnum.GET,
+    path: '/templatesList',
+  })
+  async templateList(@Context() ctx: EggContext) {
+    const { pageIndex, pageSize } = ctx.query;
+    const listCondition: IndexCondition = {
+      select: 'id author copiedCount coverImg desc title user isHot createdAt',
+      populate: { path: 'user', select: 'username nickName picture' },
+      // find: { isPublic: true, isTemplate: true },
+      find: {},
+      ...(pageIndex && { pageIndex: parseInt(pageIndex) }),
+      ...(pageSize && { pageSize: parseInt(pageSize) }),
+    };
+    const res = await this.workService.getList(listCondition);
+    return ctx.helper.success({ res });
+  }
+  @HTTPMethod({
+    method: HTTPMethodEnum.GET,
     path: '/:id',
   })
   @checkPremission('Work', 'permissionWorkFail')

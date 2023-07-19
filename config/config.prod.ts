@@ -4,7 +4,7 @@ export default () => {
   const config: PowerPartial<EggAppConfig> = {};
   config.baseUrl = 'prod.url';
   config.security = {
-    domainWhiteList: [ 'http://120.78.65.45' ],
+    domainWhiteList: ['http://120.78.65.45'], // cors
   };
   // jwt 失效时间
   config.jwtExpires = '2 days';
