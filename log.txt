@@ -32,4 +32,12 @@ Wed Jul 19 2023 19:36:44 GMT+0800 (中国标准时间) -- OPTIONS --/api/users/g
   Wed Jul 19 2023 20:09:36 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 5ms
   Wed Jul 19 2023 20:11:38 GMT+0800 (中国标准时间) -- GET --/api/users/getUserInfo -- 17ms
   Wed Jul 19 2023 20:11:38 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 26ms
+  Wed Jul 19 2023 20:53:54 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 44ms
+  Wed Jul 19 2023 20:54:18 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 29ms
+  Wed Jul 19 2023 20:54:36 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 14ms
+  Wed Jul 19 2023 20:54:51 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 23ms
+  Wed Jul 19 2023 20:55:46 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 31ms
+  Wed Jul 19 2023 20:55:54 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 7ms
+  Wed Jul 19 2023 20:55:59 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 6ms
+  Wed Jul 19 2023 20:56:03 GMT+0800 (中国标准时间) -- GET --/api/work/templatesList?pageIndex=0&pageSize=8 -- 9ms
   
