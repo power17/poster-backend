@@ -7,7 +7,7 @@ services:
       - '.docker-volumes/mongo/data:/data/db'
       - '$PWD/mongo-entrypoint/:/docker-entrypoint-initdb.d/'
     env_file:
-      - .env  
+      - .env
     ports:
       - 27018:27017
   poster-redis:
@@ -16,7 +16,7 @@ services:
       --requirepass ${REDIS_PASSWORD}
     container_name: poster-redis
     env_file:
-      - .env 
+      - .env
     ports:
       - 6378:6379
   poster-backend:
@@ -26,6 +26,6 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/power137/poster-backend:{{tag}}
     container_name: poster-backend
     ports:
-      - 7002:7001
+      - 5173:7001
     env_file:
-      - .env   
+      - .env
