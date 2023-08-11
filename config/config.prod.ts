@@ -4,14 +4,14 @@ export default () => {
   const config: PowerPartial<EggAppConfig> = {};
   config.baseUrl = 'prod.url';
   config.security = {
-    domainWhiteList: ['http://120.78.65.45'], // cors
+    domainWhiteList: ['http://power17.xyz'], // cors
   };
   // jwt 失效时间
   config.jwtExpires = '2 days';
   config.giteeOauthConfig = {
-    redirectURL: 'http://120.78.65.45/api/users/gitee/callback',
+    redirectURL: 'http://power17.xyz/api/users/gitee/callback',
   };
-  config.h5baseUrl = 'http://120.78.65.45/api/utils/pages';
+  config.h5baseUrl = 'http://power17.xyz/api/utils/pages';
   // config.mongoose = {
   //   client: {
   //     url: 'mongodb://poster-mongo:27017/poster',
